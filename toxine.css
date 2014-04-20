@@ -1,0 +1,118 @@
+html {
+    height: 100%;
+}
+
+body {
+    margin: 10px calc(10% - 30px);
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 75%;
+    height: 90%;
+}
+
+div {
+    padding: 5px 10px;
+}
+
+label, input, textarea {
+    display: block;
+}
+
+form .ui-spinner, form input, form textarea {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#alpha-tag {
+    font-size: 50%;
+    color: red;
+}
+
+#connect-dialog-port {
+    display: inline;
+}
+
+#sidebar {
+    padding: 0;
+    color: white;
+    background: #404040;
+    float: left;
+    width: 20%;
+    height: calc(95% - 50px);
+    margin-right: 10px;
+}
+
+#user-nick, #chat-contact {
+    font-size: 125%;
+    font-weight: bold;
+}
+
+#user-statustext, #chat-contact-statustext {
+    font-style: italic;
+}
+
+#chat-contact-statustext {
+    border-bottom: 1px solid lightgrey;
+}
+
+#user {
+    padding: 0;
+    background: black;
+}
+
+
+ul {
+    padding: 0px 10px;
+    margin: 0px;
+    overflow-y: scroll;
+}
+
+li {
+    text-height: 125%;
+    list-style-type: none;
+    padding: 0px;
+    margin: 10px 0px;
+}
+
+
+#contact-list {
+    max-height: calc(100% - 68px);
+}
+
+#contact-list li {
+    border-bottom: 1px solid lightgrey;
+}
+
+#chat {
+    width: calc(70%);
+    float: right;
+    height: 100%;
+    margin-right: 5%;
+    padding-top: 0;
+}
+
+#chat-text {
+    position: absolute;
+    top: 150px;
+    bottom: 70px;
+    margin-right: 5%;
+    text-align: justify;
+}
+
+#chat-input {
+    position: absolute;
+    bottom: 10px;
+    width: calc(70% - 60px);
+}
+
+#chat-input-text {
+    width: calc(100% - 100px);
+    float: left;
+    margin-right: 5px;
+}
+
+#chat-buttons button {
+    height: 30px;
+    width: 30px;
+}
+

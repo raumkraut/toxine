@@ -42,9 +42,15 @@ a {
     font-family: 'Oxygen', sans-serif;
 }
 
-.dialog label, .dialog input, .dialog textarea {
+.dialog label, .dialog input, .dialog textarea, .dialog div b{
     display: block;
     margin-bottom: 10px;
+}
+
+.dialog div {
+    padding: 0;
+    display: block;
+    margin-bottom: 15px;
 }
 
 .dialog .half {

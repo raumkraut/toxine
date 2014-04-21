@@ -40,7 +40,7 @@
     <body>
         <h1>Toxine <span id='alpha-tag'>alpha</span></h1>
         <div class='dialog' id='connect-dialog' title='Connect to Tox network'>
-            <label for='connect-dialog-data'>Existing data
+            <label for='connect-dialog-data'>Existing key
             file (if blank, a new user will be created):</label>
             <input type='file' id='connect-dialog-data'
                 class='ui-widget-content ui-corner-all'>
@@ -71,12 +71,19 @@
                 class='ui-widget-content ui-corner-all'
                 ></textarea>
         </div>
-        <div class='dialog' id='config-dialog' title='Configuration'>
-            Private key
-            <input type='checkbox' id='config-dialog-persistent-key' checked></input>
-            <label for='config-dialog-persistent-key'>Enable persistent storage</label>
-            <a href='#' class='half' id='config-dialog-download-key'>Download key file</a>
-            <a href='#' class='half' id='config-dialog-clear-key'>Clear now</a>
+        <div class='dialog' id='keys-dialog' title='Your keys'>
+            <div>
+            <b>Public key</b> (share for friends to add you)
+            <textarea rows='3' id='keys-dialog-public-key' disabled></textarea>
+            <a href='#' class='right half' id='keys-dialog-nospam'>New nospam code</a><br/>
+            </div>
+            <div>
+            <b>Private key</b>
+            <input type='checkbox' id='keys-dialog-persistent-key' checked></input>
+            <label for='keys-dialog-persistent-key'>Enable persistent storage</label>
+            <a href='#' class='half' id='keys-dialog-download-key'>Download key file</a>
+            <a href='#' class='half' id='keys-dialog-clear-key'>Clear now</a>
+            </div>
         </div>
         <div id='sidebar' class='ui-widget-content ui-corner-all'>
             <div id='user' class='ui-corner-top'>
@@ -92,7 +99,7 @@
                 <input type='checkbox' class='toggle' id='sidebar-aliases' checked></input>
                 <label for='sidebar-aliases'>Show aliases</label>
                 <button class='right' id='sidebar-connection-settings'>Connection settings...</button>
-                <button class='right' id='sidebar-configuration'>Configuration...</button>
+                <button class='right' id='sidebar-keys-dialog'>Your keys...</button>
             </div>
         </div>
         <div id='chat'>

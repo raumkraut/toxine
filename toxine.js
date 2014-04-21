@@ -92,7 +92,7 @@ function setupUI()
         buttons: { 'Ok': function() {  } }
     });
     
-    $('#config-dialog').dialog(
+    $('#keys-dialog').dialog(
     {
         width: '400px',
         modal: true,
@@ -100,9 +100,10 @@ function setupUI()
         autoOpen: false,
     });
     
-    $('#config-dialog-persistent-key').button();
-    $('#config-dialog-download-key').button({ icons: { primary:'ui-icon-arrowthick-1-s' } });
-    $('#config-dialog-clear-key').button({ icons: { secondary:'ui-icon-trash' } });
+    $('#keys-dialog-nospam').button({ icons: { secondary:'ui-icon-arrowrefresh-1-s' } });
+    $('#keys-dialog-persistent-key').button();
+    $('#keys-dialog-download-key').button({ icons: { primary:'ui-icon-arrowthick-1-s' } });
+    $('#keys-dialog-clear-key').button({ icons: { secondary:'ui-icon-trash' } });
 
     $('#user-nick').editable();
     $('#user-statustext').editable();
@@ -114,11 +115,11 @@ function setupUI()
     $('#sidebar-remove-contact').button({ icons: { primary:'ui-icon-minus' }, text: false });
     $('#sidebar-aliases').button({ icons: { primary:'ui-icon-tag' }, text: false });
     
-    $('#sidebar-connection-settings').button({ icons: { primary:'ui-icon-key' }, text: false })
+    $('#sidebar-connection-settings').button({ icons: { primary:'ui-icon-locked' }, text: false })
         .click(function () { $('#connect-dialog').dialog('open'); });
     
-    $('#sidebar-configuration').button({ icons: { primary:'ui-icon-gear' }, text: false })
-        .click(function () { $('#config-dialog').dialog('open'); });
+    $('#sidebar-keys-dialog').button({ icons: { primary:'ui-icon-key' }, text: false })
+        .click(function () { $('#keys-dialog').dialog('open'); });
     
     $('#chat-send').button({ icons: { primary:'ui-icon-comment' }, text: false });
     $('#chat-attach').button({ icons: { primary:'ui-icon-document' }, text: false });

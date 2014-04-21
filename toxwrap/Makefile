@@ -25,10 +25,6 @@ LIBSODIUM_SOURCES=																			\
 	libsodium/crypto_auth/hmacsha512256/ref/hmac_hmacsha512256.c                            \
 	libsodium/crypto_auth/hmacsha512256/ref/verify_hmacsha512256.c                          \
 	libsodium/crypto_auth/hmacsha512256/auth_hmacsha512256_api.c                            \
-	libsodium/sodium/core.c                                                                 \
-	libsodium/sodium/compat.c                                                               \
-	libsodium/sodium/utils.c                                                                \
-	libsodium/sodium/version.c                                                              \
 	libsodium/crypto_shorthash/siphash24/ref/shorthash_siphash24.c                          \
 	libsodium/crypto_shorthash/siphash24/shorthash_siphash24_api.c                          \
 	libsodium/crypto_shorthash/crypto_shorthash.c                                           \
@@ -148,8 +144,11 @@ LIBSODIUM_SOURCES=																			\
 	libsodium/crypto_stream/aes256estream/hongjun/aes256-ctr.c                              \
 	libsodium/crypto_stream/aes256estream/stream_aes256estream_api.c                        \
 	libsodium/crypto_scalarmult/crypto_scalarmult.c                                         \
-	libsodium/crypto_scalarmult/curve25519/donna_c64/smult_curve25519_donna_c64.c           \
-	libsodium/crypto_scalarmult/curve25519/donna_c64/base_curve25519_donna_c64.c
+	libsodium/crypto_scalarmult/curve25519/ref/smult_curve25519_ref.c     				    \
+	libsodium/crypto_scalarmult/curve25519/ref/base_curve25519_ref.c						\
+	libsodium/sodium/core.c                                                                 \
+	libsodium/sodium/utils.c                                                                \
+	libsodium/sodium/version.c                                                              
 
 SOURCES = $(TOXCORE_SOURCES) $(LIBSODIUM_SOURCES) toxwrap.c
 	
@@ -182,5 +181,8 @@ toxwrap: toxwrap.c $(O_OBJECTS)
 
 clean:
 	rm -f toxwrap toxwrap.js toxwrap.js.map $(BC_OBJECTS) $(O_OBJECTS)
+
+nm:
+	llvm-nm $(BC_OBJECTS)
 
 all: toxwrap.js

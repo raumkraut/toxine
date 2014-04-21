@@ -30,6 +30,6 @@ Note that other license conditions might apply to libsodium, whammy, opus and ot
 by the code. IANAL.
 
 [1]: http://tox.im  "Tox peer-to-peer instant messaging network"
-[2]: http://polymeris.github.io/toxine.html "Live Toxine demo"
+[2]: http://toxi.in "Live Toxine demo"
 [3]: http://blog.libtoxcore.so/193/tox-a-new-direction "Tox: A New Direction"
 [4]: http://www.gnu.org/copyleft/gpl.html "GNU General Public License (GPLv3)"

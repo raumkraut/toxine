@@ -21,16 +21,105 @@
  * 
  */
 
-$(window).on('load', function()
+try
+{
+    this['Module'] = Module;
+    Module.test;
+}
+catch(e)
+{
+    this['Module'] = Module = {};
+}
+
+Module['preRun'] = Module['preRun'] || [];
+Module['preRun'].push(createDevRandom);
+
+$(window).on('load', setupUI);
+
+function createDevRandom() 
+{
+    var randombyte = null;    
+    try
+    {
+        function randombyte_standard()
+        {
+            var buf = new Int8Array(1);            
+            window.crypto.getRandomValues(buf);
+            return buf[0];
+        }
+        randombyte_standard();
+        randombyte = randombyte_standard;
+    } 
+    catch (e)
+    {
+        try
+        {
+            var crypto = require('crypto');
+            function randombyte_node()
+            {
+                return crypto.randomBytes(1)[0];
+            }
+            randombyte_node();
+            randombyte = randombyte_node;
+        }
+        catch(e) { }
+    }
+    
+    FS.init();
+    var devFolder = FS.findObject('/dev') ||
+        Module['FS_createFolder']('/', 'dev', true, true);    
+    Module['FS_createDevice'](devFolder, 'random', randombyte);
+    Module['FS_createDevice'](devFolder, 'urandom', randombyte);    
+}
+
+function setupUI()
 {
     $('#connect-dialog-port').spinner();
     $('#connect-dialog').dialog(
     {
         width: '400px',
+        modal: true,
         resizable: false,
-        buttons: { 'Connect': function() { $(this).dialog() } }
+        buttons: { 'Connect': function() {  } }
     });
+    
+    $('#add-contact-dialog').dialog(
+    {
+        width: '400px',
+        modal: true,
+        resizable: false,
+        autoOpen: false,
+        buttons: { 'Ok': function() {  } }
+    });
+    
+    $('#config-dialog').dialog(
+    {
+        width: '400px',
+        modal: true,
+        resizable: false,
+        autoOpen: false,
+    });
+    
+    $('#config-dialog-persistent-key').button();
+    $('#config-dialog-download-key').button({ icons: { primary:'ui-icon-arrowthick-1-s' } });
+    $('#config-dialog-clear-key').button({ icons: { secondary:'ui-icon-trash' } });
 
+    $('#user-nick').editable();
+    $('#user-statustext').editable();
+    
+    $('#sidebar-add-contact').button({ icons: { primary:'ui-icon-plus' }, text: false })
+        .click(function () { $('#add-contact-dialog').dialog('open'); });
+    $('#add-contact-button').click(function () { $('#add-contact-dialog').dialog('open'); });
+    
+    $('#sidebar-remove-contact').button({ icons: { primary:'ui-icon-minus' }, text: false });
+    $('#sidebar-aliases').button({ icons: { primary:'ui-icon-tag' }, text: false });
+    
+    $('#sidebar-connection-settings').button({ icons: { primary:'ui-icon-key' }, text: false })
+        .click(function () { $('#connect-dialog').dialog('open'); });
+    
+    $('#sidebar-configuration').button({ icons: { primary:'ui-icon-gear' }, text: false })
+        .click(function () { $('#config-dialog').dialog('open'); });
+    
     $('#chat-send').button({ icons: { primary:'ui-icon-comment' }, text: false });
     $('#chat-attach').button({ icons: { primary:'ui-icon-document' }, text: false });
-});
+}

@@ -25,50 +25,75 @@
     <head>
         <title>Toxine</title>
         <meta content='text/html;charset=utf-8' http-equiv='Content-Type'>
-        <link href='toxine.css' rel='stylesheet' type='text/css'>
-        <link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css' />
-        <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script>
-        <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js'></script>
+        <link href='http://fonts.googleapis.com/css?family=Oxygen:400,700' rel='stylesheet' type='text/css'>
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script>
+        <link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/blitzer/jquery-ui.css' />
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js'></script>
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/jeditable.js/1.7.3/jeditable.min.js'></script>
         <script src='whammy/whammy.js'></script>
-        <script src='toxwrap/pre.js'></script>
-        <script src='toxwrap/toxwrap.js'></script>
         <script src='toxine.js'></script>
+        <!--
+        <script src='toxwrap/toxwrap.js'></script>
+        -->
+        <link href='toxine.css' rel='stylesheet' type='text/css'>
     </head>
     <body>
         <h1>Toxine <span id='alpha-tag'>alpha</span></h1>
         <div class='dialog' id='connect-dialog' title='Connect to Tox network'>
-            <form>
-                <label for='connect-dialog-data'>Existing data
-                file (if blank, a new user will be created):</label>
-                <input type='file' name='connect-dialog-data'
-                    id='connect-dialog-data'
-                    class='ui-widget-content ui-corner-all'>
-                </input>
-                <label for='connect-dialog-address'>Bootstrap address:</label>
-                <input type='text' name='connect-dialog-address'
-                    id='connect-dialog-address'
-                    class='ui-widget-content ui-corner-all'
-                    value='23.226.230.47'></input>
-                <label for='connect-dialog-port'>Bootstrap port:</label>
-                <input type='text' name='connect-dialog-port'
-                    id='connect-dialog-port'
-                    class='ui-corner-all'
-                    value='33445'></input>
-                <label for='connect-dialog-key'>Bootstrap key:</label>
-                <textarea name='connect-dialog-key'
-                    id='connect-dialog-key'
-                    class='ui-widget-content ui-corner-all'
-                    >A09162D68618E742FFBCA1C2C70385E6679604B2D80EA6E84AD0996A1AC8A074</textarea>
-            </form>
+            <label for='connect-dialog-data'>Existing data
+            file (if blank, a new user will be created):</label>
+            <input type='file' id='connect-dialog-data'
+                class='ui-widget-content ui-corner-all'>
+            </input>
+            <label for='connect-dialog-address'>Bootstrap address:</label>
+            <input type='text' id='connect-dialog-address'
+                class='ui-widget-content ui-corner-all'
+                value='23.226.230.47'></input>
+            <label for='connect-dialog-port'>Bootstrap port:</label>
+            <input type='text' id='connect-dialog-port'
+                class='ui-corner-all'
+                value='33445'></input>
+            <label for='connect-dialog-key'>Bootstrap key:</label>
+            <textarea id='connect-dialog-key'
+                class='ui-widget-content ui-corner-all'
+                >A09162D68618E742FFBCA1C2C70385E6679604B2D80EA6E84AD0996A1AC8A074</textarea>
         </div>
-        <div id='sidebar'>
-            <div id='user'>
+        <div class='dialog' id='add-contact-dialog' title='Add a contact'>
+            <label for='add-contact-dialog-id'>Tox ID:</label>
+            <textarea id='add-contact-dialog-id'
+                class='ui-widget-content ui-corner-all'
+                ></textarea>
+            <label for='connect-dialog-alias'>Alias:</label>
+            <input type='text' id='add-contact-dialog-alias'
+                class='ui-widget-content ui-corner-all'></input>
+            <label for='add-contact-dialog-message'>Message:</label>
+            <textarea id='add-contact-dialog-message'
+                class='ui-widget-content ui-corner-all'
+                ></textarea>
+        </div>
+        <div class='dialog' id='config-dialog' title='Configuration'>
+            Private key
+            <input type='checkbox' id='config-dialog-persistent-key' checked></input>
+            <label for='config-dialog-persistent-key'>Enable persistent storage</label>
+            <a href='#' class='half' id='config-dialog-download-key'>Download key file</a>
+            <a href='#' class='half' id='config-dialog-clear-key'>Clear now</a>
+        </div>
+        <div id='sidebar' class='ui-widget-content ui-corner-all'>
+            <div id='user' class='ui-corner-top'>
                 <div id='user-nick'>Not connected</div>
                 <div id='user-statustext'>Set your status...</div>
             </div>
             <ul id='contact-list'>
-                no contacts
+                <p>No contacts in your list. <a id='add-contact-button' href='#'>Add one</a>.</p>
             </ul>
+            <div id='sidebar-buttons'>
+                <button id='sidebar-add-contact'>Add contact...</button>
+                <button id='sidebar-remove-contact' disabled>Remove contact</button>
+                <input type='checkbox' class='toggle' id='sidebar-aliases' checked></input>
+                <label for='sidebar-aliases'>Show aliases</label>
+                <button class='right' id='sidebar-connection-settings'>Connection settings...</button>
+                <button class='right' id='sidebar-configuration'>Configuration...</button>
+            </div>
         </div>
         <div id='chat'>
             <div id='chat-contact'>&nbsp;</div>
@@ -76,13 +101,22 @@
             <ul id='chat-text'>
             </ul>
             <div id='chat-input'>
-                <textarea id='chat-input-text' rows='2'></textarea>
+                <textarea id='chat-input-text' rows='2' class='ui-widget-content ui-corner-all'></textarea>
                 <div id='chat-buttons'>
                     <button id='chat-send' disabled>Send</button>
                     <button id='chat-attach' disabled>Attach</button>
                 </div>
             </div>
         </div>
-        <a href="http://github.com/polymeris/toxine"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+        <div id='footer'>
+            <a href='http://github.com/polymeris/toxine/wiki/Users-Guide'>Help</a> |
+            <a href='http://github.com/polymeris/toxine'>About Toxine</a> |
+            <a href='http://tox.im'>What is Tox?</a>
+        </div>
+        <a href='http://github.com/polymeris/toxine'>
+            <img style='position: absolute; top: 0; right: 0; border: 0;'
+            src='https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67'
+            alt='Fork me on GitHub' data-canonical-src='https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png'>
+        </a>
     </body>
 </html>

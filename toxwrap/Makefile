@@ -55,7 +55,6 @@ LIBSODIUM_SOURCES=																			\
 	libsodium/crypto_box/curve25519xsalsa20poly1305/ref/after_curve25519xsalsa20poly1305.c  \
 	libsodium/crypto_box/curve25519xsalsa20poly1305/ref/box_curve25519xsalsa20poly1305.c    \
 	libsodium/crypto_box/crypto_box.c                                                       \
-	libsodium/crypto_scalarmult/crypto_scalarmult.c                                         \
 	libsodium/crypto_sign/edwards25519sha512batch/sign_edwards25519sha512batch_api.c        \
 	libsodium/crypto_sign/edwards25519sha512batch/ref/fe25519_edwards25519sha512batch.c     \
 	libsodium/crypto_sign/edwards25519sha512batch/ref/ge25519_edwards25519sha512batch.c     \
@@ -148,17 +147,16 @@ LIBSODIUM_SOURCES=																			\
 	libsodium/crypto_stream/crypto_stream.c                                                 \
 	libsodium/crypto_stream/aes256estream/hongjun/aes256-ctr.c                              \
 	libsodium/crypto_stream/aes256estream/stream_aes256estream_api.c                        \
-	libsodium/crypto_scalarmult/curve25519/donna_c64/smult_curve25519_donna_c64.c           \
-	libsodium/crypto_scalarmult/curve25519/donna_c64/base_curve25519_donna_c64.c            \
+	libsodium/crypto_scalarmult/crypto_scalarmult.c                                         \
 	libsodium/crypto_scalarmult/curve25519/scalarmult_curve25519_api.c                      \
-	libsodium/crypto_scalarmult/curve25519/ref/smult_curve25519_ref.c                       \
-	libsodium/crypto_scalarmult/curve25519/ref/base_curve25519_ref.c                     
+	libsodium/crypto_scalarmult/curve25519/donna_c64/smult_curve25519_donna_c64.c           \
+	libsodium/crypto_scalarmult/curve25519/donna_c64/base_curve25519_donna_c64.c
 
 SOURCES = $(TOXCORE_SOURCES) $(LIBSODIUM_SOURCES) toxwrap.c
 	
-INCLUDES=																	\
-	-Ilibsodium/include														\
-	-Ilibsodium/include/sodium												\
+INCLUDES=																					\
+	-Ilibsodium/include																		\
+	-Ilibsodium/include/sodium																\
 	-Itoxcore
 
 CFLAGS=-Wall
@@ -167,6 +165,7 @@ EMCC=emcc -O0
 CC=gcc -c -std=c99
 
 BC_OBJECTS=$(SOURCES:.c=.bc)
+
 O_OBJECTS=$(SOURCES:.c=.o)
 
 %.bc: %.c
@@ -183,13 +182,5 @@ toxwrap: toxwrap.c $(O_OBJECTS)
 
 clean:
 	rm -f toxwrap toxwrap.js toxwrap.js.map $(BC_OBJECTS) $(O_OBJECTS)
-
-test-link.js:
-	$(EMCC) $(INCLUDES)	\
-	libsodium/crypto_scalarmult/curve25519/donna_c64/smult_curve25519_donna_c64.c           \
-	libsodium/crypto_scalarmult/curve25519/scalarmult_curve25519_api.c                      \
-	libsodium/crypto_scalarmult/curve25519/ref/smult_curve25519_ref.c                       \
-	libsodium/crypto_scalarmult/crypto_scalarmult.c                                         \
-	-s EXPORTED_FUNCTIONS="['crypto_scalarmult_curve25519']" -o test-link.js
 
 all: toxwrap.js

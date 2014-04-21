@@ -74,6 +74,8 @@ function createDevRandom()
 
 function setupUI()
 {
+    $('#js-warning').hide();
+    $('#wrap').css('visibility', 'visible');
     $('#connect-dialog-port').spinner();
     $('#connect-dialog').dialog(
     {

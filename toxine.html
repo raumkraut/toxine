@@ -39,50 +39,53 @@
     </head>
     <body>
         <h1>Toxine <span id='alpha-tag'>alpha</span></h1>
-        <div class='dialog' id='connect-dialog' title='Connect to Tox network'>
-            <label for='connect-dialog-data'>Existing key
-            file (if blank, a new user will be created):</label>
-            <input type='file' id='connect-dialog-data'
-                class='ui-widget-content ui-corner-all'>
-            </input>
-            <label for='connect-dialog-address'>Bootstrap address:</label>
-            <input type='text' id='connect-dialog-address'
-                class='ui-widget-content ui-corner-all'
-                value='23.226.230.47'></input>
-            <label for='connect-dialog-port'>Bootstrap port:</label>
-            <input type='text' id='connect-dialog-port'
-                class='ui-corner-all'
-                value='33445'></input>
-            <label for='connect-dialog-key'>Bootstrap key:</label>
-            <textarea id='connect-dialog-key'
-                class='ui-widget-content ui-corner-all'
-                >A09162D68618E742FFBCA1C2C70385E6679604B2D80EA6E84AD0996A1AC8A074</textarea>
-        </div>
-        <div class='dialog' id='add-contact-dialog' title='Add a contact'>
-            <label for='add-contact-dialog-id'>Tox ID:</label>
-            <textarea id='add-contact-dialog-id'
-                class='ui-widget-content ui-corner-all'
-                ></textarea>
-            <label for='connect-dialog-alias'>Alias:</label>
-            <input type='text' id='add-contact-dialog-alias'
-                class='ui-widget-content ui-corner-all'></input>
-            <label for='add-contact-dialog-message'>Message:</label>
-            <textarea id='add-contact-dialog-message'
-                class='ui-widget-content ui-corner-all'
-                ></textarea>
-        </div>
-        <div class='dialog' id='keys-dialog' title='Your keys'>
-            <div>
-            <b>Public key</b> (share for friends to add you)
-            <textarea rows='3' id='keys-dialog-public-key' disabled></textarea>
-            <a href='#' class='right half' id='keys-dialog-nospam'>New nospam code</a><br/>
+        <h2 id='js-warning'>Toxine requires javascript.</h2>
+        <div id='wrap'>
+            <div class='dialog' id='connect-dialog' title='Connect to Tox network'>
+                <label for='connect-dialog-data'>Existing key
+                file (if blank, a new user will be created):</label>
+                <input type='file' id='connect-dialog-data'
+                    class='ui-widget-content ui-corner-all'>
+                </input>
+                <label for='connect-dialog-address'>Bootstrap address:</label>
+                <input type='text' id='connect-dialog-address'
+                    class='ui-widget-content ui-corner-all'
+                    value='23.226.230.47'></input>
+                <label for='connect-dialog-port'>Bootstrap port:</label>
+                <input type='text' id='connect-dialog-port'
+                    class='ui-corner-all'
+                    value='33445'></input>
+                <label for='connect-dialog-key'>Bootstrap key:</label>
+                <textarea id='connect-dialog-key'
+                    class='ui-widget-content ui-corner-all'
+                    >A09162D68618E742FFBCA1C2C70385E6679604B2D80EA6E84AD0996A1AC8A074</textarea>
             </div>
-            <div>
-            <b>Private key</b>
-            <input type='checkbox' id='keys-dialog-persistent-key' checked></input>
-            <label for='keys-dialog-persistent-key'>Enable persistent storage</label>
-            <a href='#' class='half' id='keys-dialog-download-key'>Download key file</a>
-            <a href='#' class='half' id='keys-dialog-clear-key'>Clear now</a>
+            <div class='dialog' id='add-contact-dialog' title='Add a contact'>
+                <label for='add-contact-dialog-id'>Tox ID:</label>
+                <textarea id='add-contact-dialog-id'
+                    class='ui-widget-content ui-corner-all'
+                    ></textarea>
+                <label for='connect-dialog-alias'>Alias:</label>
+                <input type='text' id='add-contact-dialog-alias'
+                    class='ui-widget-content ui-corner-all'></input>
+                <label for='add-contact-dialog-message'>Message:</label>
+                <textarea id='add-contact-dialog-message'
+                    class='ui-widget-content ui-corner-all'
+                    ></textarea>
+            </div>
+            <div class='dialog' id='keys-dialog' title='Your keys'>
+                <div>
+                <b>Public key</b> (share for friends to add you)
+                <textarea rows='3' id='keys-dialog-public-key' disabled></textarea>
+                <a href='#' class='right half' id='keys-dialog-nospam'>New nospam code</a><br/>
+                </div>
+                <div>
+                <b>Private key</b>
+                <input type='checkbox' id='keys-dialog-persistent-key' checked></input>
+                <label for='keys-dialog-persistent-key'>Enable persistent storage</label>
+                <a href='#' class='half' id='keys-dialog-download-key'>Download key file</a>
+                <a href='#' class='half' id='keys-dialog-clear-key'>Clear now</a>
+                </div>
             </div>
         </div>
         <div id='sidebar' class='ui-widget-content ui-corner-all'>
@@ -114,7 +117,7 @@
                     <button id='chat-attach' disabled>Attach</button>
                 </div>
             </div>
-        </div>
+        </div>        
         <div id='footer'>
             <a href='http://github.com/polymeris/toxine/wiki/Users-Guide'>Help</a> |
             <a href='http://github.com/polymeris/toxine'>About Toxine</a> |

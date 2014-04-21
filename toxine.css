@@ -29,6 +29,11 @@ body {
     height: 90%;
 }
 
+div#wrap {
+    padding: 0;
+    visibility: hidden;
+}
+
 div {
     padding: 5px 10px;
 }

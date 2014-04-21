@@ -148,7 +148,6 @@ LIBSODIUM_SOURCES=																			\
 	libsodium/crypto_stream/aes256estream/hongjun/aes256-ctr.c                              \
 	libsodium/crypto_stream/aes256estream/stream_aes256estream_api.c                        \
 	libsodium/crypto_scalarmult/crypto_scalarmult.c                                         \
-	libsodium/crypto_scalarmult/curve25519/scalarmult_curve25519_api.c                      \
 	libsodium/crypto_scalarmult/curve25519/donna_c64/smult_curve25519_donna_c64.c           \
 	libsodium/crypto_scalarmult/curve25519/donna_c64/base_curve25519_donna_c64.c
 
@@ -157,7 +156,8 @@ SOURCES = $(TOXCORE_SOURCES) $(LIBSODIUM_SOURCES) toxwrap.c
 INCLUDES=																					\
 	-Ilibsodium/include																		\
 	-Ilibsodium/include/sodium																\
-	-Itoxcore
+	-Itoxcore																				\
+	-include sodiumdefines.h
 
 CFLAGS=-Wall
 

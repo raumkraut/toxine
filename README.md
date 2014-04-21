@@ -1,5 +1,6 @@
 Toxine is a browser-based client for the [Tox][1] network.
-It's written in javascript, html and css.
+
+It's written in C, javascript, html and css.
 Text chat is supported by most modern browsers, other features, when implemented, might demand
 recent versions.
 
@@ -7,6 +8,7 @@ Try the [demo][2]!
 
 Rationale
 ---------
+
 One of the stated goals of the Tox project is to make usage of the tox network as easy as possible,
 no matter the level of expertise of the user or their prefered platform. [Jokes][3] aside, a
 javascript implementation allows anyone to test this messaging system by just pointing their
@@ -21,6 +23,7 @@ provided the browser and OS are trusted.
 
 License
 -------
+
 Since toxwrap is statically linked against the toxcore library, it has to be distributed under the
 terms of the [GNU General Public License][4], version 3.
 Note that other license conditions might apply to libsodium, whammy, opus and other libraries used

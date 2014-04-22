@@ -21,6 +21,8 @@
  * 
  */
 
+var tox = null;
+
 // JS detected!
 $('#js-warning').hide();
 $('#wrap').css('visibility', 'visible');
@@ -44,33 +46,13 @@ Module['preRun'].push(createDevRandom);
 
 function createDevRandom() 
 {
-    var randombyte = null;    
-    try
+    function randombyte()
     {
-        function randombyte_standard()
-        {
-            var buf = new Int8Array(1);            
-            window.crypto.getRandomValues(buf);
-            return buf[0];
-        }
-        randombyte_standard();
-        randombyte = randombyte_standard;
-    } 
-    catch (e)
-    {
-        try
-        {
-            var crypto = require('crypto');
-            function randombyte_node()
-            {
-                return crypto.randomBytes(1)[0];
-            }
-            randombyte_node();
-            randombyte = randombyte_node;
-        }
-        catch(e) { }
+        var buf = new Int8Array(1);            
+        window.crypto.getRandomValues(buf);
+        return buf[0];
     }
-    
+        
     FS.init();
     var devFolder = FS.findObject('/dev') ||
         Module['FS_createFolder']('/', 'dev', true, true);    
@@ -94,7 +76,7 @@ function setupUI()
         modal: true,
         resizable: false,
         autoOpen: true,
-        buttons: { 'Connect': function() {  } }
+        buttons: { 'Connect': connectClicked }
     });
     
     $('#add-contact-dialog').dialog(
@@ -145,20 +127,36 @@ function setupTox()
 
     tox.setup = Module.cwrap('setup');
     tox.update = Module.cwrap('update');
+    tox.connect = Module.cwrap('bootstrap', 'boolean', ['string', 'number', 'string']);
     tox.cleanup = Module.cwrap('cleanup');
     
     tox.setup();
+}
+
+function connectClicked()
+{
+    var addr = $('#connect-dialog-address').val();
+    var port = parseInt($('#connect-dialog-port').val());
+    var key = $('#connect-dialog-key').val();
+    try
+    {
+        if (!tox.connect(addr, port, key))
+            throw 'tox.connect error';
+    }
+    catch (e)
+    {
+        console.log(e);
+        $('#connect-dialog-address').addClass('.ui-state-error');
+        return;
+    }
     
-    setInterval(update, 1000);
+    $('#connect-dialog-address').removeClass('.ui-state-error');
+    $('#connect-dialog').dialog('close');
+    setInterval(tox.update, 1000);
 }
 
 function cleanup()
 {
     if (tox)
         tox.cleanup();
-}
-
-function update()
-{
-    tox.update();
 }

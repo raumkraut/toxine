@@ -1,4 +1,4 @@
-FUNCTIONS= "['_setup','_cleanup','_update']"
+FUNCTIONS= "['_setup','_bootstrap','_cleanup','_update']"
 
 TOXCORE_SOURCES= 															\
 	toxcore/tox.c															\
@@ -152,7 +152,7 @@ LIBSODIUM_SOURCES=																			\
 	libsodium/sodium/utils.c                                                                \
 	libsodium/sodium/version.c                                                              
 
-SOURCES = $(TOXCORE_SOURCES) $(LIBSODIUM_SOURCES) toxwrap.c
+SOURCES = $(TOXCORE_SOURCES) $(LIBSODIUM_SOURCES)
 	
 INCLUDES=																					\
 	-Ilibsodium/include																		\
@@ -163,28 +163,19 @@ INCLUDES=																					\
 CFLAGS=-Wall
 
 EMCC=emcc -O2
-CC=gcc -c -std=c99
 
 BC_OBJECTS=$(SOURCES:.c=.bc)
 
-O_OBJECTS=$(SOURCES:.c=.o)
-
 %.bc: %.c
 	$(EMCC) $(CFLAGS) $(INCLUDES) $< -o $@
-
-%.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@
 	
-toxwrap.js: toxwrap.c $(BC_OBJECTS)
-	$(EMCC) $(CFLAGS) $(INCLUDES) -s EXPORTED_FUNCTIONS=$(FUNCTIONS) $(BC_OBJECTS) -o toxwrap.js
-
-toxwrap: toxwrap.c $(O_OBJECTS)
-	$(CC) $(CFLAGS) $(INCLUDES) $(O_OBJECTS) -o toxwrap
-
+tox.js: tox.c $(BC_OBJECTS) Makefile
+	$(EMCC) $(CFLAGS) $(INCLUDES) -s EXPORTED_FUNCTIONS=$(FUNCTIONS) $(BC_OBJECTS) tox.c -o tox.js
+	
 clean:
-	rm -f toxwrap toxwrap.js toxwrap.js.map $(BC_OBJECTS) $(O_OBJECTS)
+	rm -f tox.js tox.js.map $(BC_OBJECTS) $(O_OBJECTS)
 
 nm:
 	llvm-nm $(BC_OBJECTS)
 
-all: toxwrap.js
+all: tox.js

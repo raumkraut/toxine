@@ -20,20 +20,16 @@
  * 
  */
 
-#define BOOTSTRAP_ADDRESS "23.226.230.47"
-#define BOOTSTRAP_PORT 33445
-#define BOOTSTRAP_KEY "A09162D68618E742FFBCA1C2C70385E6679604B2D80EA6E84AD0996A1AC8A074"
-
-#define MY_NAME "ImoutoBot"
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <emscripten.h>
 #include <tox.h>
 
+#include "misc_tools.c"
 
-Tox *tox;
+
+Tox * tox;
 
 void srandom(unsigned int seed)
 {
@@ -48,24 +44,27 @@ int getsockopt(int sockfd, int level, int optname, void * optval, socklen_t * op
 
 void friend_request(Tox * tox, uint8_t * public_key, uint8_t * data, uint16_t length, void * userdata)
 {
+    EM_ASM(tox.contact_request('$0', '$1'), key, data);
 }
 
 void friend_message(Tox * tox, int friend, uint8_t * string, uint16_t length, void * userdata)
 {
+    EM_ASM(tox.contact_message($0, '$1'), friend, string);
 }
 
 void name_change(Tox * tox, int friend, uint8_t * string, uint16_t length, void * userdata)
 {
+    EM_ASM(tox.contact_nick_change($0, '$1'), friend, string);
 }
 
 void status_message(Tox * tox, int friend, uint8_t * string, uint16_t length, void * userdata)
 {
+    EM_ASM(tox.contact_status_message($0, '$1'), friend, string);
 }
 
 void update()
 {
     tox_do(tox);
-    printf("Updated\n");
 }
 
 void setup()
@@ -81,6 +80,14 @@ void setup()
     tox_callback_friend_message(tox, friend_message, NULL);
     tox_callback_name_change(tox, name_change, NULL);
     tox_callback_status_message(tox, status_message, NULL);
+}
+
+int bootstrap(char * address, int port, char * key)
+{
+    unsigned char * pub_key = hex_string_to_bin(key);
+    int res = tox_bootstrap_from_address(tox, address, TOX_ENABLE_IPV6_DEFAULT, htons(port), pub_key);
+    free(pub_key);
+    return res;
 }
 
 void cleanup()

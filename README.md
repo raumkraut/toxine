@@ -10,7 +10,8 @@ Rationale
 ---------
 
 One of the stated goals of the Tox project is to make usage of the tox network as easy as possible,
-no matter the level of expertise of the user or their prefered platform. [Jokes][3] aside, a
+no matter the level of expertise of the user or their prefered platform. In [this blog post][3], 
+_irungentoo_ predicted that Tox would be "usable by anyone with a web browser". Jokes aside, a
 javascript implementation allows anyone to test this messaging system by just pointing their
 browsers to [a webpage hosting toxine][2].
 These users can later export their configuration (secret key and users list) if they decide to
@@ -21,6 +22,13 @@ user data is not exchanged with the webpage provider, the client code directly c
 network, i.e. Toxine is *not* webbased, therefore no privacy concerns arise in that regard,
 provided the browser and OS are trusted.
 
+Usage
+-----
+
+See the [User's Guide] (TODO).
+For local installation, download this repo using git, then run `./autogen.sh` in the repo's
+top-level directory. You will need to have [emscripten][5] installed.
+
 License
 -------
 
@@ -30,6 +38,7 @@ Note that other license conditions might apply to libsodium, whammy, opus and ot
 by the code. IANAL.
 
 [1]: http://tox.im  "Tox peer-to-peer instant messaging network"
-[2]: http://toxi.in "Live Toxine demo"
+[2]: http://polymeris.github.io "Live Toxine demo"
 [3]: http://blog.libtoxcore.so/193/tox-a-new-direction "Tox: A New Direction"
 [4]: http://www.gnu.org/copyleft/gpl.html "GNU General Public License (GPLv3)"
+[5]: http://www.emscripten.org "Emscripten LLVM to JavaScript compiler"

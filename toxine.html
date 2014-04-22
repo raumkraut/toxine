@@ -40,8 +40,8 @@
         <noscript><h2 id='js-warning'>Toxine requires javascript.</h2></noscript>
         <div id='wrap'>
             <div class='dialog' id='connect-dialog' title='Connect to Tox network'>
-                <label for='connect-dialog-data'>Existing key
-                file (if blank, a new user will be created):</label>
+                <span class='ui-icon-contact ui-icon left'></span>
+                <label for='connect-dialog-data'>Credentials (if blank, a new user will be created):</label>
                 <input type='file' id='connect-dialog-data'
                     class='ui-widget-content ui-corner-all'>
                 </input>
@@ -53,8 +53,8 @@
                 <input type='text' id='connect-dialog-port'
                     class='ui-corner-all'
                     value='33445'></input>
-                <label for='connect-dialog-key'>Bootstrap key:</label>
-                <textarea id='connect-dialog-key'
+                <label for='connect-dialog-key'>Bootstrap ID:</label>
+                <textarea id='connect-dialog-id'
                     class='ui-widget-content ui-corner-all'
                     >A09162D68618E742FFBCA1C2C70385E6679604B2D80EA6E84AD0996A1AC8A074</textarea>
             </div>
@@ -63,6 +63,7 @@
                 <textarea id='add-contact-dialog-id'
                     class='ui-widget-content ui-corner-all'
                     ></textarea>
+                <span class='ui-icon-tag ui-icon left'></span>
                 <label for='connect-dialog-alias'>Alias:</label>
                 <input type='text' id='add-contact-dialog-alias'
                     class='ui-widget-content ui-corner-all'></input>
@@ -71,24 +72,30 @@
                     class='ui-widget-content ui-corner-all'
                     ></textarea>
             </div>
-            <div class='dialog' id='keys-dialog' title='Your keys'>
-                <div>
-                <b>Public key</b> (share for friends to add you)
-                <textarea rows='3' id='keys-dialog-public-key' disabled></textarea>
-                <a href='#' class='right half' id='keys-dialog-nospam'>New nospam code</a><br/>
+            <div class='dialog' id='credentials-dialog' title='Your credentials'>
+                <div class='section'>
+                    <span class='ui-icon-person ui-icon left'></span>
+                    <span><b>Tox ID</b>(share for friends to add you)</span>
+                    <textarea rows='3' id='credentials-dialog-tox-id' disabled></textarea>
+                    <a href='#' class='half' id='credentials-dialog-copy'>Copy to clipboard</a>
+                    <a href='#' class='half' id='credentials-dialog-nospam'>New nospam code</a><br/>
                 </div>
-                <div>
-                <b>Private key</b>
-                <input type='checkbox' id='keys-dialog-persistent-key' checked></input>
-                <label for='keys-dialog-persistent-key'>Enable persistent storage</label>
-                <a href='#' class='half' id='keys-dialog-download-key'>Download key file</a>
-                <a href='#' class='half' id='keys-dialog-clear-key'>Clear now</a>
+                <hr/>
+                <div class='section'>
+                    <span class='ui-icon-key ui-icon left'></span>
+                    <span><b>Credentials</b>(keep these secret)</span>
+                    <input type='checkbox' id='credentials-dialog-persistent' checked></input>
+                    <label for='credentials-dialog-persistent'>Enable persistent storage</label>
+                    <input type='checkbox' id='credentials-dialog-encrypt'></input>
+                    <label for='credentials-dialog-encrypt'>Encrypt</label>
+                    <a href='#' class='half' id='credentials-dialog-download'>Download credentials</a>
+                    <a href='#' class='half' id='credentials-dialog-clear'>Clear now</a>
                 </div>
             </div>
         </div>
         <div id='sidebar' class='ui-widget-content ui-corner-all'>
             <div id='user' class='ui-corner-top'>
-                <div id='user-nick'>Not connected</div>
+                <div id='user-name'>Not connected</div>
                 <div id='user-statustext'>Set your status...</div>
             </div>
             <ul id='contact-list'>
@@ -104,8 +111,8 @@
             </div>
         </div>
         <div id='chat'>
-            <div id='chat-contact'>&nbsp;</div>
-            <div id='chat-contact-statustext'>Select a contact to start chatting</div>
+            <div id='chat-contact-name'>&nbsp;</div>
+            <div id='chat-contact-status'>Select a contact to start chatting</div>
             <ul id='chat-text'>
             </ul>
             <div id='chat-input'>

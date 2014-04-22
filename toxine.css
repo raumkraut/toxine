@@ -43,6 +43,12 @@ a {
     text-decoration: none;
 }
 
+hr {
+    border: 0;
+    border-top: 1px solid #C00;
+    width: 85%;
+}
+
 .ui-widget {
     font-family: 'Oxygen', sans-serif;
 }
@@ -77,6 +83,11 @@ a {
     margin-left: .2em;
 }
 
+.left {
+    float: left;
+    margin-right: .2em;
+}
+
 #alpha-tag {
     font-size: 50%;
     color: #c00;
@@ -100,22 +111,22 @@ a {
     color: #fcefa1;
 }
 
-#user-nick, #chat-contact {
+#user-name, #chat-contact {
     font-size: 125%;
     font-weight: bold;
 }
 
-#user-statustext, #chat-contact-statustext {
+#user-status, #chat-contact-status {
     font-style: italic;
     padding-bottom: 10px;
 }
 
-#user-statustext {
+#user-status {
     color: lightgrey;
     border-bottom: 1px solid #c00;
 }
 
-#chat-contact-statustext {
+#chat-contact-status {
     border-bottom: 1px solid lightgrey;
 }
 

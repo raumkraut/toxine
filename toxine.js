@@ -73,7 +73,7 @@ function setupUI()
     $('#connect-dialog-port').spinner();
     $('#connect-dialog').dialog(
     {
-        width: '400px',
+        width: '500px',
         modal: true,
         resizable: false,
         autoOpen: true,
@@ -82,28 +82,30 @@ function setupUI()
     
     $('#add-contact-dialog').dialog(
     {
-        width: '400px',
+        width: '500px',
         modal: true,
         resizable: false,
         autoOpen: false,
         buttons: { 'Ok': function() {  } }
     });
     
-    $('#keys-dialog').dialog(
+    $('#credentials-dialog').dialog(
     {
-        width: '400px',
+        width: '500px',
         modal: true,
         resizable: false,
         autoOpen: false,
     });
     
-    $('#keys-dialog-nospam').button({ icons: { secondary:'ui-icon-arrowrefresh-1-s' } });
-    $('#keys-dialog-persistent-key').button();
-    $('#keys-dialog-download-key').button({ icons: { primary:'ui-icon-arrowthick-1-s' } });
-    $('#keys-dialog-clear-key').button({ icons: { secondary:'ui-icon-trash' } });
+    $('#credentials-dialog-copy').button({ icons: { primary:'ui-icon-clipboard' } });
+    $('#credentials-dialog-nospam').button({ icons: { secondary:'ui-icon-arrowrefresh-1-s' } });
+    $('#credentials-dialog-persistent').button();
+    $('#credentials-dialog-encrypt').button();
+    $('#credentials-dialog-download').button({ icons: { primary:'ui-icon-arrowthick-1-s' } });
+    $('#credentials-dialog-clear').button({ icons: { secondary:'ui-icon-trash' } });
 
-    $('#user-nick').editable();
-    $('#user-statustext').editable();
+    $('#user-name').editable();
+    $('#user-status').editable();
     
     $('#sidebar-add-contact').button({ icons: { primary:'ui-icon-plus' }, text: false })
         .click(function () { $('#add-contact-dialog').dialog('open'); });
@@ -115,8 +117,8 @@ function setupUI()
     $('#sidebar-connection-settings').button({ icons: { primary:'ui-icon-locked' }, text: false })
         .click(function () { $('#connect-dialog').dialog('open'); });
     
-    $('#sidebar-keys-dialog').button({ icons: { primary:'ui-icon-key' }, text: false })
-        .click(function () { $('#keys-dialog').dialog('open'); });
+    $('#sidebar-keys-dialog').button({ icons: { primary:'ui-icon-contact' }, text: false })
+        .click(function () { $('#credentials-dialog').dialog('open'); });
     
     $('#chat-send').button({ icons: { primary:'ui-icon-comment' }, text: false });
     $('#chat-attach').button({ icons: { primary:'ui-icon-document' }, text: false });
@@ -149,7 +151,7 @@ function connectClicked()
 {
     var addr = $('#connect-dialog-address').val();
     var port = parseInt($('#connect-dialog-port').val());
-    var key = $('#connect-dialog-key').val();
+    var id = $('#connect-dialog-id').val();
     try
     {
         if (!tox.connect(addr, port, key))

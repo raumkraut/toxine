@@ -21,6 +21,14 @@
  * 
  */
 
+// JS detected!
+$('#js-warning').hide();
+$('#wrap').css('visibility', 'visible');
+
+// Setup main entry points
+$(window).on('load', setup);
+$(window).on('beforeunload', cleanup);
+
 try
 {
     this['Module'] = Module;
@@ -33,8 +41,6 @@ catch(e)
 
 Module['preRun'] = Module['preRun'] || [];
 Module['preRun'].push(createDevRandom);
-
-$(window).on('load', setupUI);
 
 function createDevRandom() 
 {
@@ -72,16 +78,21 @@ function createDevRandom()
     Module['FS_createDevice'](devFolder, 'urandom', randombyte);    
 }
 
+function setup()
+{  
+    setupUI();
+    setupTox();
+}
+
 function setupUI()
 {
-    $('#js-warning').hide();
-    $('#wrap').css('visibility', 'visible');
     $('#connect-dialog-port').spinner();
     $('#connect-dialog').dialog(
     {
         width: '400px',
         modal: true,
         resizable: false,
+        autoOpen: true,
         buttons: { 'Connect': function() {  } }
     });
     
@@ -125,4 +136,20 @@ function setupUI()
     
     $('#chat-send').button({ icons: { primary:'ui-icon-comment' }, text: false });
     $('#chat-attach').button({ icons: { primary:'ui-icon-document' }, text: false });
+}
+
+function setupTox()
+{
+    tox = new Object();
+
+    tox.setup = Module.cwrap('setup');
+    tox.cleanup = Module.cwrap('cleanup');
+    
+    tox.setup();
+}
+
+function cleanup()
+{
+    if (tox)
+        tox.cleanup();
 }

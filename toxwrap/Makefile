@@ -1,3 +1,5 @@
+FUNCTIONS= "['_setup','_cleanup']"
+
 TOXCORE_SOURCES= 															\
 	toxcore/tox.c															\
 	toxcore/assoc.c 														\
@@ -160,7 +162,7 @@ INCLUDES=																					\
 
 CFLAGS=-Wall
 
-EMCC=emcc -O0
+EMCC=emcc -O2
 CC=gcc -c -std=c99
 
 BC_OBJECTS=$(SOURCES:.c=.bc)
@@ -174,7 +176,7 @@ O_OBJECTS=$(SOURCES:.c=.o)
 	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@
 	
 toxwrap.js: toxwrap.c $(BC_OBJECTS)
-	$(EMCC) $(CFLAGS) $(INCLUDES) $(BC_OBJECTS) -o toxwrap.js
+	$(EMCC) $(CFLAGS) $(INCLUDES) -s EXPORTED_FUNCTIONS=$(FUNCTIONS) $(BC_OBJECTS) -o toxwrap.js
 
 toxwrap: toxwrap.c $(O_OBJECTS)
 	$(CC) $(CFLAGS) $(INCLUDES) $(O_OBJECTS) -o toxwrap

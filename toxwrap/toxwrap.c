@@ -67,9 +67,8 @@ void update()
     printf("Update");
 }
 
-int main(int argc, const char * argv[])
+void setup()
 {
-    printf("Init tox\n");
     tox = tox_new(0);
     if (!tox)
     {
@@ -77,17 +76,15 @@ int main(int argc, const char * argv[])
         exit(1);
     }
     
-    printf("Register callbacks\n");
     tox_callback_friend_request(tox, friend_request, NULL);
     tox_callback_friend_message(tox, friend_message, NULL);
     tox_callback_name_change(tox, name_change, NULL);
     tox_callback_status_message(tox, status_message, NULL);
-    
-    printf("Start main loop\n");
-    emscripten_set_main_loop(update, 1, 1);
-    
+}
+
+void cleanup()
+{
     tox_kill(tox);
-    return 0;
 }
 
 

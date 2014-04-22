@@ -25,10 +25,11 @@ user data is not exchanged with the webpage provider, the client code directly c
 network, i.e. Toxine is *not* webbased, therefore no privacy concerns arise in that regard,
 provided the browser and OS are trusted.
 
-Usage
------
+User's Guide
+------------
 
-See the [User's Guide][4].
+*TODO*
+
 For local installation, download this repo using git, then run `./autogen.sh` in the repo's
 top-level directory. You will need to have [emscripten][5] installed.
 
@@ -43,6 +44,5 @@ by the code. IANAL.
 [1]: http://tox.im  "Tox peer-to-peer instant messaging network"
 [2]: http://polymeris.github.io "Live Toxine demo"
 [3]: http://blog.libtoxcore.so/193/tox-a-new-direction "Tox: A New Direction"
-[4]: http://github.com/polymeris/toxine/wiki/User's-Guide "User's Guide"
 [5]: http://www.emscripten.org "Emscripten LLVM to JavaScript compiler"
 [6]: http://www.gnu.org/copyleft/gpl.html "GNU General Public License (GPLv3)"

@@ -28,7 +28,7 @@
 
 #include "misc_tools.c"
 
-#define MICROPERIOD 250000
+#define WAITPERIOD 100 //ms
 #define EXPORT_THIS EMSCRIPTEN_KEEPALIVE 
 
 
@@ -53,6 +53,7 @@ int getsockopt(int sockfd, int level, int optname, void * optval, socklen_t * op
 }
 
 /***** HELPERS */
+/* Actual callback functions, invoke JS code */
 
 void friend_request(Tox * tox, uint8_t * public_key, uint8_t * data, uint16_t length, void * userdata)
 {
@@ -79,35 +80,37 @@ void status_message(Tox * tox, int friend, uint8_t * string, uint16_t length, vo
 }
 
 /***** EXPORTED FUNCTIONS */
+/* These are CamelCase, because they map to JS */
 
-EXPORT_THIS void update()
-{
-    tox_wait_prepare(tox, tox_data);
-    tox_wait_execute(tox_data, 0, MICROPERIOD);
-    tox_wait_cleanup(tox, tox_data);
+EXPORT_THIS int update()
+{  
+    int ret = 1;
+    ret &= tox_wait_prepare(tox, tox_data);
+    ret &= tox_wait_execute(tox_data, 0, WAITPERIOD * 1000);
+    ret &= tox_wait_cleanup(tox, tox_data);
     tox_do(tox);
+    ret &= tox_isconnected(tox);
+    return ret;
 }
 
-EXPORT_THIS void setup()
+EXPORT_THIS int setup()
 {
     tox = tox_new(0);
     if (!tox)
     {
         printf("Failed to allocate Messenger datastructure");
-        exit(1);
+        return 1;
     }
     
     tox_data = malloc(tox_wait_data_size());
+    if (!tox_data)
+        return 1;
     
     tox_callback_friend_request(tox, friend_request, NULL);
     tox_callback_friend_message(tox, friend_message, NULL);
     tox_callback_name_change(tox, name_change, NULL);
     tox_callback_status_message(tox, status_message, NULL);
-}
-
-EXPORT_THIS int isConnected()
-{
-    return tox_isconnected(tox);
+    return 0;
 }
 
 EXPORT_THIS int bootstrap(char * address, int port, char * key)
@@ -115,7 +118,7 @@ EXPORT_THIS int bootstrap(char * address, int port, char * key)
     unsigned char * pub_key = hex_string_to_bin(key);
     int res = tox_bootstrap_from_address(tox, address, TOX_ENABLE_IPV6_DEFAULT, htons(port), pub_key);
     free(pub_key);
-    return res && isConnected();
+    return res;
 }
 
 EXPORT_THIS char * getId()

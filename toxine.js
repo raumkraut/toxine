@@ -21,6 +21,8 @@
  * 
  */
 
+const UPDATE_INTERVAL = 250; //milliseconds
+
 var tox = null;
 
 // JS detected!
@@ -54,8 +56,7 @@ function createDevRandom()
     }
         
     FS.init();
-    var devFolder = FS.findObject('/dev') ||
-        Module['FS_createFolder']('/', 'dev', true, true);    
+    var devFolder = FS.findObject('/dev') || Module['FS_createFolder']('/', 'dev', true, true);    
     Module['FS_createDevice'](devFolder, 'random', randombyte);
     Module['FS_createDevice'](devFolder, 'urandom', randombyte);    
 }
@@ -125,11 +126,22 @@ function setupTox()
 {
     tox = new Object();
 
-    tox.setup = Module.cwrap('setup');
-    tox.update = Module.cwrap('update');
+    tox.setup =   Module.cwrap('setup',     'boolean');
+    tox.update =  Module.cwrap('update',    'boolean');
     tox.connect = Module.cwrap('bootstrap', 'boolean', ['string', 'number', 'string']);
-    tox.cleanup = Module.cwrap('cleanup');
+    tox.cleanup = Module.cwrap('cleanup'); 
     
+    tox.getId = Module.cwrap('getId', 'string');
+
+    tox.addContact =    Module.cwrap('addContact',    'boolean', ['string', 'string']);
+    tox.removeContact = Module.cwrap('removeContact', 'boolean', ['string']);
+    
+    tox.sendMessage = Module.cwrap('sendMessage', 'boolean', ['string', 'string']);
+
+    tox.setName = Module.cwrap('setName', 'boolean', ['string']);
+    tox.getName = Module.cwrap('getName', 'string');
+    
+    tox.connected = false;
     tox.setup();
 }
 
@@ -152,11 +164,16 @@ function connectClicked()
     
     $('#connect-dialog-address').removeClass('.ui-state-error');
     $('#connect-dialog').dialog('close');
-    setInterval(tox.update, 1000);
+    setInterval(update, UPDATE_INTERVAL);
 }
 
 function cleanup()
 {
     if (tox)
         tox.cleanup();
+}
+
+function update()
+{
+    tox.connected = tox.update();
 }

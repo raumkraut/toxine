@@ -1,5 +1,3 @@
-FUNCTIONS= "['_setup','_bootstrap','_cleanup','_update']"
-
 TOXCORE_SOURCES= 															\
 	toxcore/tox.c															\
 	toxcore/assoc.c 														\
@@ -153,24 +151,27 @@ LIBSODIUM_SOURCES=																			\
 	libsodium/sodium/version.c                                                              
 
 SOURCES = $(TOXCORE_SOURCES) $(LIBSODIUM_SOURCES)
-	
+
+MAIN_SOURCE = tox.c
+
 INCLUDES=																					\
 	-Ilibsodium/include																		\
 	-Ilibsodium/include/sodium																\
 	-Itoxcore																				\
 	-include sodiumdefines.h
 
-CFLAGS=-Wall
+FUNCTIONS=${shell grep EXPORT_THIS $(MAIN_SOURCE) | sed -n "s/.*\s\(.*\)(.*/'_\1',/p"}
+EXP_FUNCS=-s EXPORTED_FUNCTIONS="[$(FUNCTIONS)]"
 
-EMCC=emcc -O2
+CFLAGS=-O2 -Wall
 
 BC_OBJECTS=$(SOURCES:.c=.bc)
 
 %.bc: %.c
-	$(EMCC) $(CFLAGS) $(INCLUDES) $< -o $@
+	emcc $(CFLAGS) $(INCLUDES) $< -o $@
 	
-tox.js: tox.c $(BC_OBJECTS) Makefile
-	$(EMCC) $(CFLAGS) $(INCLUDES) -s EXPORTED_FUNCTIONS=$(FUNCTIONS) $(BC_OBJECTS) tox.c -o tox.js
+tox.js: $(MAIN_SOURCE) $(BC_OBJECTS) Makefile
+	emcc $(CFLAGS) $(EXP_FUNCS) $(INCLUDES) $(BC_OBJECTS) $(MAIN_SOURCE) -o tox.js
 	
 clean:
 	rm -f tox.js tox.js.map $(BC_OBJECTS) $(O_OBJECTS)
@@ -179,3 +180,4 @@ nm:
 	llvm-nm $(BC_OBJECTS)
 
 all: tox.js
+

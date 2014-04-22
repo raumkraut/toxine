@@ -1,6 +1,9 @@
 Toxine is a browser-based client for the [Tox][1] network.
 
 It's written in C, javascript, html and css.
+
+*Not functinal yet, early development stage*
+
 Text chat is supported by most modern browsers, other features, when implemented, might demand
 recent versions.
 
@@ -25,7 +28,7 @@ provided the browser and OS are trusted.
 Usage
 -----
 
-See the [User's Guide] (TODO).
+See the [User's Guide][4].
 For local installation, download this repo using git, then run `./autogen.sh` in the repo's
 top-level directory. You will need to have [emscripten][5] installed.
 
@@ -33,12 +36,13 @@ License
 -------
 
 Since toxwrap is statically linked against the toxcore library, it has to be distributed under the
-terms of the [GNU General Public License][4], version 3.
+terms of the [GNU General Public License][6], version 3.
 Note that other license conditions might apply to libsodium, whammy, opus and other libraries used
 by the code. IANAL.
 
 [1]: http://tox.im  "Tox peer-to-peer instant messaging network"
 [2]: http://polymeris.github.io "Live Toxine demo"
 [3]: http://blog.libtoxcore.so/193/tox-a-new-direction "Tox: A New Direction"
-[4]: http://www.gnu.org/copyleft/gpl.html "GNU General Public License (GPLv3)"
+[4]: http://github.com/polymeris/toxine/wiki/User's-Guide "User's Guide"
 [5]: http://www.emscripten.org "Emscripten LLVM to JavaScript compiler"
+[6]: http://www.gnu.org/copyleft/gpl.html "GNU General Public License (GPLv3)"

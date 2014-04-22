@@ -154,6 +154,8 @@ SOURCES = $(TOXCORE_SOURCES) $(LIBSODIUM_SOURCES)
 
 MAIN_SOURCE = tox.c
 
+OUTPUT_JS = ../tox.js
+
 INCLUDES=																					\
 	-Ilibsodium/include																		\
 	-Ilibsodium/include/sodium																\
@@ -163,21 +165,21 @@ INCLUDES=																					\
 FUNCTIONS=${shell grep EXPORT_THIS $(MAIN_SOURCE) | sed -n "s/.*\s\(.*\)(.*/'_\1',/p"}
 EXP_FUNCS=-s EXPORTED_FUNCTIONS="[$(FUNCTIONS)]"
 
-CFLAGS=-O2 -Wall
+CFLAGS=-O2 -Wall #-s VERBOSE=1
 
 BC_OBJECTS=$(SOURCES:.c=.bc)
 
 %.bc: %.c
 	emcc $(CFLAGS) $(INCLUDES) $< -o $@
 	
-tox.js: $(MAIN_SOURCE) $(BC_OBJECTS) Makefile
-	emcc $(CFLAGS) $(EXP_FUNCS) $(INCLUDES) $(BC_OBJECTS) $(MAIN_SOURCE) -o tox.js
+$(OUTPUT_JS): $(MAIN_SOURCE) $(BC_OBJECTS) Makefile
+	emcc $(CFLAGS) $(EXP_FUNCS) $(INCLUDES) $(BC_OBJECTS) $(MAIN_SOURCE) -o $(OUTPUT_JS)
 	
 clean:
-	rm -f tox.js tox.js.map $(BC_OBJECTS) $(O_OBJECTS)
+	rm -f $(OUTPUT_JS) $(BC_OBJECTS) $(O_OBJECTS)
 
 nm:
 	llvm-nm $(BC_OBJECTS)
 
-all: tox.js
+all: $(OUTPUT_JS)
 

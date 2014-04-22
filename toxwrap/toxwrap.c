@@ -64,7 +64,8 @@ void status_message(Tox * tox, int friend, uint8_t * string, uint16_t length, vo
 
 void update()
 {
-    printf("Update");
+    tox_do(tox);
+    printf("Updated\n");
 }
 
 void setup()

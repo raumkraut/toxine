@@ -82,6 +82,7 @@ function setup()
 {  
     setupUI();
     setupTox();
+    $('#loading').css('visibility', 'hidden');
 }
 
 function setupUI()
@@ -143,13 +144,21 @@ function setupTox()
     tox = new Object();
 
     tox.setup = Module.cwrap('setup');
+    tox.update = Module.cwrap('update');
     tox.cleanup = Module.cwrap('cleanup');
     
     tox.setup();
+    
+    setInterval(update, 1000);
 }
 
 function cleanup()
 {
     if (tox)
         tox.cleanup();
+}
+
+function update()
+{
+    tox.update();
 }

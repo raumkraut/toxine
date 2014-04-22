@@ -1,4 +1,4 @@
-FUNCTIONS= "['_setup','_cleanup']"
+FUNCTIONS= "['_setup','_cleanup','_update']"
 
 TOXCORE_SOURCES= 															\
 	toxcore/tox.c															\

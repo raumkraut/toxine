@@ -172,8 +172,11 @@ BC_OBJECTS=$(SOURCES:.c=.bc)
 %.bc: %.c
 	emcc $(CFLAGS) $(INCLUDES) $< -o $@
 	
-$(OUTPUT_JS): $(MAIN_SOURCE) $(BC_OBJECTS) Makefile
-	emcc $(CFLAGS) $(EXP_FUNCS) $(INCLUDES) $(BC_OBJECTS) $(MAIN_SOURCE) -o $(OUTPUT_JS)
+$(OUTPUT_JS): $(MAIN_SOURCE) $(BC_OBJECTS) DHTnodes Makefile
+	emcc $(CFLAGS) $(EXP_FUNCS) $(INCLUDES) --preload-file DHTnodes $(BC_OBJECTS) $(MAIN_SOURCE) -o $(OUTPUT_JS)
+
+DHTnodes:
+	wget -O DHTnodes http://stupiddog.soupwhale.com/files/tox/dht/DHTnodes
 	
 clean:
 	rm -f $(OUTPUT_JS) $(BC_OBJECTS) $(O_OBJECTS)

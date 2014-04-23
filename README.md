@@ -7,7 +7,7 @@ It's written in C, javascript, html and css.
 Text chat is supported by most modern browsers, other features, when implemented, might demand
 recent versions.
 
-Try the [demo][2]!
+Try the [demo at **http://toxi.in**][2]!
 
 Rationale
 ---------
@@ -42,7 +42,7 @@ Note that other license conditions might apply to libsodium, whammy, opus and ot
 by the code. IANAL.
 
 [1]: http://tox.im  "Tox peer-to-peer instant messaging network"
-[2]: http://polymeris.github.io "Live Toxine demo"
+[2]: http://toxi.in "Live Toxine demo"
 [3]: http://blog.libtoxcore.so/193/tox-a-new-direction "Tox: A New Direction"
 [4]: https://codeload.github.com/polymeris/toxine/zip/master "Zipped toxine master branch"
 [5]: http://www.emscripten.org "Emscripten LLVM to JavaScript compiler"

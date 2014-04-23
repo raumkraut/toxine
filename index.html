@@ -38,26 +38,9 @@
     <body>
         <h1>Toxine <span id='alpha-tag'>alpha</span><span id='loading'> is loading...</span></h1>
         <noscript><h2 id='js-warning'>Toxine requires javascript.</h2></noscript>
+        <!-------- DIALOGS ------------>
         <div id='wrap'>
-            <div class='dialog' id='connect-dialog' title='Connect to Tox network'>
-                <span class='ui-icon-contact ui-icon left'></span>
-                <label for='connect-dialog-data'>Credentials (if blank, a new user will be created):</label>
-                <input type='file' id='connect-dialog-data'
-                    class='ui-widget-content ui-corner-all'>
-                </input>
-                <label for='connect-dialog-address'>Bootstrap address:</label>
-                <input type='text' id='connect-dialog-address'
-                    class='ui-widget-content ui-corner-all'
-                    value='23.226.230.47'></input>
-                <label for='connect-dialog-port'>Bootstrap port:</label>
-                <input type='text' id='connect-dialog-port'
-                    class='ui-corner-all'
-                    value='33445'></input>
-                <label for='connect-dialog-key'>Bootstrap ID:</label>
-                <textarea id='connect-dialog-id'
-                    class='ui-widget-content ui-corner-all'
-                    >A09162D68618E742FFBCA1C2C70385E6679604B2D80EA6E84AD0996A1AC8A074</textarea>
-            </div>
+            <!-- Add contact dialog -->
             <div class='dialog' id='add-contact-dialog' title='Add a contact'>
                 <label for='add-contact-dialog-id'>Tox ID:</label>
                 <textarea id='add-contact-dialog-id'
@@ -72,27 +55,50 @@
                     class='ui-widget-content ui-corner-all'
                     ></textarea>
             </div>
-            <div class='dialog' id='credentials-dialog' title='Your credentials'>
-                <div class='section'>
-                    <span class='ui-icon-person ui-icon left'></span>
-                    <span><b>Tox ID</b>(share for friends to add you)</span>
-                    <textarea rows='3' id='credentials-dialog-tox-id' disabled></textarea>
-                    <a href='#' class='half' id='credentials-dialog-copy'>Copy to clipboard</a>
-                    <a href='#' class='half' id='credentials-dialog-nospam'>New nospam code</a><br/>
+            <!-- Profile dialog -->
+            <div class='dialog' id='profile-dialog' title='Your profile'>
+                <span><b>Tox ID</b>(share for friends to add you)</span>
+                <textarea rows='3' id='profile-dialog-tox-id' disabled></textarea>
+                <div>
+                    <button class='half' id='profile-dialog-copy'>Copy to clipboard</button>
+                    <button class='half' id='profile-dialog-qr'>Generate QR code</button><br/>
                 </div>
-                <hr/>
-                <div class='section'>
-                    <span class='ui-icon-key ui-icon left'></span>
-                    <span><b>Credentials</b>(keep these secret)</span>
-                    <input type='checkbox' id='credentials-dialog-persistent' checked></input>
-                    <label for='credentials-dialog-persistent'>Enable persistent storage</label>
-                    <input type='checkbox' id='credentials-dialog-encrypt'></input>
-                    <label for='credentials-dialog-encrypt'>Encrypt</label>
-                    <a href='#' class='half' id='credentials-dialog-download'>Download credentials</a>
-                    <a href='#' class='half' id='credentials-dialog-clear'>Clear now</a>
+                <button class='half' id='profile-dialog-nospam'>New nospam code</button><br/>
+            </div>
+            <!-- Credentials dialog -->
+            <div class='dialog' id='credentials-dialog' title='Your credentials'>
+                <span class='ui-icon-alert ui-icon left'></span>
+                <span><b>Keep these files secret</b></span></br>
+                <label for='connect-dialog-data'>Upload credentials:</label>
+                <input type='file' id='connect-dialog-data'
+                    class='ui-widget-content ui-corner-all'>
+                </input>
+                <input type='checkbox' id='credentials-dialog-persistent' checked></input>
+                <label for='credentials-dialog-persistent'>Enable persistent storage</label>
+                <input type='checkbox' id='credentials-dialog-encrypt'></input>
+                <label for='credentials-dialog-encrypt'>Encrypt</label>
+                <a href='#' class='half' id='credentials-dialog-download'>Download credentials</a>
+                <a href='#' class='half' id='credentials-dialog-clear'>Clear now</a>
+            </div>
+            <!-- Settings dialog -->
+            <div class='dialog' id='settings-dialog' title='Advanced settings'>
+                <input type='checkbox' id='settings-dialog-custom'></input>
+                <label for='settings-dialog-custom'>Custom bootstrap node</label>
+                <div id='settings-dialog-custom-div'>
+                    <label for='settings-dialog-address'>Address:</label>
+                    <input type='text' id='settings-dialog-address'
+                        class='ui-widget-content ui-corner-all'></input>
+                    <label for='settings-dialog-port'>Port:</label>
+                    <input type='text' id='settings-dialog-port'
+                        class='ui-corner-all' value='33445'></input>
+                    <label for='settings-dialog-key'>ID:</label>
+                    <textarea id='settings-dialog-id'
+                        class='ui-widget-content ui-corner-all'
+                        ></textarea>
                 </div>
             </div>
         </div>
+        <!-------- SIDEBAR ------------>
         <div id='sidebar' class='ui-widget-content ui-corner-all'>
             <div id='user' class='ui-corner-top'>
                 <div id='user-name'>Not connected</div>
@@ -106,10 +112,12 @@
                 <button id='sidebar-remove-contact' disabled>Remove contact</button>
                 <input type='checkbox' class='toggle' id='sidebar-aliases' checked></input>
                 <label for='sidebar-aliases'>Show aliases</label>
-                <button class='right' id='sidebar-connection-settings'>Connection settings...</button>
-                <button class='right' id='sidebar-keys-dialog'>Your keys...</button>
+                <button class='right' id='sidebar-settings'>Settings...</button>
+                <button class='right' id='sidebar-credentials'>Your credentials...</button>
+                <button class='right' id='sidebar-profile'>Your profile...</button>
             </div>
         </div>
+        <!-------- CHAT ------------>
         <div id='chat'>
             <div id='chat-contact-name'>&nbsp;</div>
             <div id='chat-contact-status'>Select a contact to start chatting</div>
@@ -122,7 +130,8 @@
                     <button id='chat-attach' disabled>Attach</button>
                 </div>
             </div>
-        </div>        
+        </div>
+        <!-------- FOOTER ------------>   
         <div id='footer'>
             <a href='http://github.com/polymeris/toxine#users-guide'>Help</a> |
             <a href='http://github.com/polymeris/toxine'>About Toxine</a> |

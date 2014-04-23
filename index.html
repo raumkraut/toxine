@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<!--
+   toxine.html
+   
+   Browser-based Tox instant messaging client.
+   
+   Camilo Polymeris, 2014
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+   MA 02110-1301, USA.
+-->
+<html xmlns='http://www.w3.org/1999/xhtml'>
+    <head>
+        <title>Toxine</title>
+        <meta content='text/html;charset=utf-8' http-equiv='Content-Type'>
+        <link href='http://fonts.googleapis.com/css?family=Oxygen:400,700' rel='stylesheet' type='text/css'>
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script>
+        <link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/blitzer/jquery-ui.css' />
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js'></script>
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/jeditable.js/1.7.3/jeditable.min.js'></script>
+        <script src='whammy/whammy.js'></script>
+        <script src='toxine.js'></script>
+        <script src='tox.js'></script>
+        <link href='toxine.css' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+        <h1>Toxine <span id='alpha-tag'>alpha</span><span id='loading'> is loading...</span></h1>
+        <noscript><h2 id='js-warning'>Toxine requires javascript.</h2></noscript>
+        <div id='wrap'>
+            <div class='dialog' id='connect-dialog' title='Connect to Tox network'>
+                <span class='ui-icon-contact ui-icon left'></span>
+                <label for='connect-dialog-data'>Credentials (if blank, a new user will be created):</label>
+                <input type='file' id='connect-dialog-data'
+                    class='ui-widget-content ui-corner-all'>
+                </input>
+                <label for='connect-dialog-address'>Bootstrap address:</label>
+                <input type='text' id='connect-dialog-address'
+                    class='ui-widget-content ui-corner-all'
+                    value='23.226.230.47'></input>
+                <label for='connect-dialog-port'>Bootstrap port:</label>
+                <input type='text' id='connect-dialog-port'
+                    class='ui-corner-all'
+                    value='33445'></input>
+                <label for='connect-dialog-key'>Bootstrap ID:</label>
+                <textarea id='connect-dialog-id'
+                    class='ui-widget-content ui-corner-all'
+                    >A09162D68618E742FFBCA1C2C70385E6679604B2D80EA6E84AD0996A1AC8A074</textarea>
+            </div>
+            <div class='dialog' id='add-contact-dialog' title='Add a contact'>
+                <label for='add-contact-dialog-id'>Tox ID:</label>
+                <textarea id='add-contact-dialog-id'
+                    class='ui-widget-content ui-corner-all'
+                    ></textarea>
+                <span class='ui-icon-tag ui-icon left'></span>
+                <label for='connect-dialog-alias'>Alias:</label>
+                <input type='text' id='add-contact-dialog-alias'
+                    class='ui-widget-content ui-corner-all'></input>
+                <label for='add-contact-dialog-message'>Message:</label>
+                <textarea id='add-contact-dialog-message'
+                    class='ui-widget-content ui-corner-all'
+                    ></textarea>
+            </div>
+            <div class='dialog' id='credentials-dialog' title='Your credentials'>
+                <div class='section'>
+                    <span class='ui-icon-person ui-icon left'></span>
+                    <span><b>Tox ID</b>(share for friends to add you)</span>
+                    <textarea rows='3' id='credentials-dialog-tox-id' disabled></textarea>
+                    <a href='#' class='half' id='credentials-dialog-copy'>Copy to clipboard</a>
+                    <a href='#' class='half' id='credentials-dialog-nospam'>New nospam code</a><br/>
+                </div>
+                <hr/>
+                <div class='section'>
+                    <span class='ui-icon-key ui-icon left'></span>
+                    <span><b>Credentials</b>(keep these secret)</span>
+                    <input type='checkbox' id='credentials-dialog-persistent' checked></input>
+                    <label for='credentials-dialog-persistent'>Enable persistent storage</label>
+                    <input type='checkbox' id='credentials-dialog-encrypt'></input>
+                    <label for='credentials-dialog-encrypt'>Encrypt</label>
+                    <a href='#' class='half' id='credentials-dialog-download'>Download credentials</a>
+                    <a href='#' class='half' id='credentials-dialog-clear'>Clear now</a>
+                </div>
+            </div>
+        </div>
+        <div id='sidebar' class='ui-widget-content ui-corner-all'>
+            <div id='user' class='ui-corner-top'>
+                <div id='user-name'>Not connected</div>
+                <div id='user-status'>Set your status...</div>
+            </div>
+            <ul id='contact-list'>
+                <p>No contacts in your list. <a id='add-contact-button' href='#'>Add one</a>.</p>
+            </ul>
+            <div id='sidebar-buttons'>
+                <button id='sidebar-add-contact'>Add contact...</button>
+                <button id='sidebar-remove-contact' disabled>Remove contact</button>
+                <input type='checkbox' class='toggle' id='sidebar-aliases' checked></input>
+                <label for='sidebar-aliases'>Show aliases</label>
+                <button class='right' id='sidebar-connection-settings'>Connection settings...</button>
+                <button class='right' id='sidebar-keys-dialog'>Your keys...</button>
+            </div>
+        </div>
+        <div id='chat'>
+            <div id='chat-contact-name'>&nbsp;</div>
+            <div id='chat-contact-status'>Select a contact to start chatting</div>
+            <ul id='chat-text'>
+            </ul>
+            <div id='chat-input'>
+                <textarea id='chat-input-text' rows='2' class='ui-widget-content ui-corner-all'></textarea>
+                <div id='chat-buttons'>
+                    <button id='chat-send' disabled>Send</button>
+                    <button id='chat-attach' disabled>Attach</button>
+                </div>
+            </div>
+        </div>        
+        <div id='footer'>
+            <a href='http://github.com/polymeris/toxine#users-guide'>Help</a> |
+            <a href='http://github.com/polymeris/toxine'>About Toxine</a> |
+            <a href='http://tox.im'>What is Tox?</a> |
+            <a href='mailto:info@toxi.in'>Contact</a> 
+        </div>
+        <a href='http://github.com/polymeris/toxine'>
+            <img style='position: absolute; top: 0; right: 0; border: 0;'
+            src='https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67'
+            alt='Fork me on GitHub' data-canonical-src='https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png'>
+        </a>
+    </body>
+</html>

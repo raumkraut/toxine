@@ -1,0 +1,13 @@
+diff --git a/toxcore/network.c b/toxcore/network.c
+index 7813ab0..9738c26 100644
+--- a/toxcore/network.c
++++ b/toxcore/network.c
+@@ -479,7 +479,7 @@ int networking_wait_execute(uint8_t *data, long seconds, long microseconds)
+     errno = 0;
+ #endif
+     /* returns -1 on error, 0 on timeout, the socket on activity */
+-    int res = select(nfds, &readfds, &writefds, &exceptfds, timeout_ptr);
++    int res = select(nfds, &readfds, &writefds, 0, timeout_ptr);
+ #ifdef LOGGING
+ 
+     /* only dump if not timeout */

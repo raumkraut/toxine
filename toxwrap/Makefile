@@ -150,7 +150,7 @@ LIBSODIUM_SOURCES=																			\
 	libsodium/sodium/utils.c                                                                \
 	libsodium/sodium/version.c                                                              
 
-SOURCES = $(TOXCORE_SOURCES) $(LIBSODIUM_SOURCES)
+SOURCES = $(TOXCORE_SOURCES) $(LIBSODIUM_SOURCES) toxtools.c
 
 MAIN_SOURCE = tox.c
 
@@ -171,15 +171,16 @@ BC_OBJECTS=$(SOURCES:.c=.bc)
 
 %.bc: %.c
 	emcc $(CFLAGS) $(INCLUDES) $< -o $@
-	
-$(OUTPUT_JS): $(MAIN_SOURCE) $(BC_OBJECTS) DHTnodes Makefile
-	emcc $(CFLAGS) $(EXP_FUNCS) $(INCLUDES) --preload-file DHTnodes $(BC_OBJECTS) $(MAIN_SOURCE) -o $(OUTPUT_JS)
 
-DHTnodes:
-	wget -O DHTnodes http://stupiddog.soupwhale.com/files/tox/dht/DHTnodes
-	
+$(OUTPUT_JS): $(MAIN_SOURCE) $(BC_OBJECTS) data/DHTnodes Makefile
+	emcc $(CFLAGS) $(EXP_FUNCS) $(INCLUDES) --preload-file data $(BC_OBJECTS) $(MAIN_SOURCE) -o $(OUTPUT_JS)
+
+data/DHTnodes:
+	mkdir -p data
+	wget -O data/DHTnodes http://stupiddog.soupwhale.com/files/tox/dht/DHTnodes
+
 clean:
-	rm -f $(OUTPUT_JS) $(BC_OBJECTS) $(O_OBJECTS)
+	rm -f $(OUTPUT_JS) $(BC_OBJECTS) $(O_OBJECTS) $(DL_DATA)
 
 nm:
 	llvm-nm $(BC_OBJECTS)

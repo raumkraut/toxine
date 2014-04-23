@@ -148,7 +148,8 @@ function setupTox()
 
     tox.setup =   Module.cwrap('setup',     'boolean');
     tox.update =  Module.cwrap('update',    'boolean');
-    tox.connect = Module.cwrap('bootstrap', 'boolean', ['string', 'number', 'string']);
+    tox.bootstrapFromList = Module.cwrap('bootstrapFromList', 'boolean');
+    tox.bootstrap = Module.cwrap('bootstrap', 'boolean', ['string', 'number', 'string']);
     tox.cleanup = Module.cwrap('cleanup'); 
     
     tox.getId = Module.cwrap('getId', 'string');
@@ -163,33 +164,11 @@ function setupTox()
     
     tox.connected = false;
     tox.setup();
-}
-
-function connectClicked()
-{
-    var addr = $('#connect-dialog-address').val();
-    var port = parseInt($('#connect-dialog-port').val());
-    var id = $('#connect-dialog-id').val();
-    try
-    {
-        if (!tox.connect(addr, port, key))
-            throw 'tox.connect error';
-    }
-    catch (e)
-    {
-        console.log(e);
-        $('#connect-dialog-address').addClass('.ui-state-error');
-        return;
-    }
     
+    tox.bootstrapFromList();
     update();
     if (tox.connected)
-    {
-        $('#connect-dialog-address').removeClass('.ui-state-error');
-        $('#connect-dialog').dialog('close');
-        $('#credentials-dialog-tox-id').html(tox.getId());
         setInterval(update, UPDATE_INTERVAL);
-    }
 }
 
 function cleanup()

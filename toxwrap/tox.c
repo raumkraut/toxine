@@ -20,19 +20,9 @@
  * 
  */
 
-#ifdef DEBUG
-#define DEBUG_PRINT(...) fprintf( stderr, __VA_ARGS__ );
-#else
-#define DEBUG_PRINT(...) ;
-#endif
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 #include <emscripten.h>
-#include <tox.h>
-
-#include "toxtools.c"
+#include "toxtools.h"
 
 #define WAITPERIOD 100 //ms
 #define EXPORT_THIS EMSCRIPTEN_KEEPALIVE 
@@ -40,7 +30,7 @@
 
 Tox * tox;
 uint8_t * tox_data;
-char * tmp_string[2000] = {0};
+char    tmp_string[2000] = {0};
 uint8_t tmp_client_id[TOX_FRIEND_ADDRESS_SIZE + 1] = {0};
 uint8_t tmp_name[TOX_MAX_NAME_LENGTH + 1];
 uint8_t tmp_status[TOX_MAX_STATUSMESSAGE_LENGTH + 1];
@@ -89,9 +79,9 @@ void status_message(Tox * tox, int friend, uint8_t * string, uint16_t length, vo
 /***** EXPORTED FUNCTIONS */
 /* These are CamelCase, because they map to JS */
 
-EXPORT_THIS int update()
+EXPORT_THIS bool update()
 {  
-    int ret = 1;
+    bool ret = 1;
     ret &= tox_wait_prepare(tox, tox_data);
     DEBUG_PRINT("prep: %d\n", ret);
     ret &= (tox_wait_execute(tox_data, 0, WAITPERIOD * 1000) > 0);
@@ -104,32 +94,37 @@ EXPORT_THIS int update()
     return ret;
 }
 
-EXPORT_THIS int setup()
+EXPORT_THIS bool setup()
 {
     tox = tox_new(0);
     if (!tox)
     {
         DEBUG_PRINT("Failed to allocate Messenger datastructure");
-        return 1;
+        return false;
     }
     
     tox_data = malloc(tox_wait_data_size());
     if (!tox_data)
-        return 1;
+        return false;
     
     tox_callback_friend_request(tox, friend_request, NULL);
     tox_callback_friend_message(tox, friend_message, NULL);
     tox_callback_name_change(tox, name_change, NULL);
     tox_callback_status_message(tox, status_message, NULL);
-    return 0;
+    return true;
 }
 
-EXPORT_THIS int bootstrap(char * address, int port, char * key)
+EXPORT_THIS bool bootstrapFromList()
+{
+    return !init_connection(tox);
+}
+
+EXPORT_THIS bool bootstrap(char * address, int port, char * key)
 {
     unsigned char * pub_key = hex_string_to_bin(key);
-    int res = tox_bootstrap_from_address(tox, address, TOX_ENABLE_IPV6_DEFAULT, htons(port), pub_key);
+    int ret = tox_bootstrap_from_address(tox, address, TOX_ENABLE_IPV6_DEFAULT, htons(port), pub_key);
     free(pub_key);
-    return res;
+    return ret;
 }
 
 EXPORT_THIS char * getId()
@@ -145,24 +140,24 @@ EXPORT_THIS void cleanup()
     tox_kill(tox);
 }
 
-EXPORT_THIS int addContact(char * id, char * msg)
+EXPORT_THIS bool addContact(char * id, char * msg)
 {
     return tox_add_friend(tox, id, msg, strlen(msg));
 }
 
-EXPORT_THIS int removeContact(uint8_t * id)
+EXPORT_THIS bool removeContact(uint8_t * id)
 {
     int32_t n = tox_get_friend_number(tox, id);
     return tox_del_friend(tox, n);
 }
 
-EXPORT_THIS int sendMessage(char * id, char * msg)
+EXPORT_THIS bool sendMessage(char * id, char * msg)
 {
     int32_t n = tox_get_friend_number(tox, id);
     return tox_send_message(tox, n, msg, strlen(msg));
 }
 
-EXPORT_THIS int setName(char * name)
+EXPORT_THIS bool setName(char * name)
 {
     return tox_set_name(tox, name, strlen(name)) == 0;
 }

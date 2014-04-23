@@ -1,0 +1,202 @@
+/* toxine.css
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
+
+html {
+    height: 100%;
+}
+
+body {
+    margin: 10px calc(10% - 30px);
+    font-family: 'Oxygen', sans-serif;
+    font-size: 75%;
+    height: 90%;
+}
+
+div#wrap {
+    padding: 0;
+    visibility: hidden;
+}
+
+div {
+    padding: 5px 10px;
+}
+
+a {
+    color: #c00;
+    text-decoration: none;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #C00;
+    width: 85%;
+}
+
+.ui-widget {
+    font-family: 'Oxygen', sans-serif;
+}
+
+.dialog label, .dialog input, .dialog textarea, .dialog div b{
+    display: block;
+    margin-bottom: 10px;
+}
+
+.dialog div {
+    padding: 0;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.dialog .half {
+    width: calc(50% - 5px);
+}
+
+.toggle {
+    display: inline;
+}
+
+.ui-spinner, input, textarea {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.right {
+    float: right;
+    margin-left: .2em;
+}
+
+.left {
+    float: left;
+    margin-right: .2em;
+}
+
+#alpha-tag {
+    font-size: 50%;
+    color: #c00;
+}
+
+#connect-dialog-port {
+    display: inline;
+}
+
+#sidebar {
+    padding: 0;
+    color: white;
+    background: #404040;
+    float: left;
+    width: 20%;
+    height: calc(110% - 120px);
+    margin-right: 10px;
+}
+
+#sidebar * a {
+    color: #fcefa1;
+}
+
+#user-name, #chat-contact {
+    font-size: 125%;
+    font-weight: bold;
+}
+
+#user-status, #chat-contact-status {
+    font-style: italic;
+    padding-bottom: 10px;
+}
+
+#user-status {
+    color: lightgrey;
+    border-bottom: 1px solid #c00;
+}
+
+#chat-contact-status {
+    border-bottom: 1px solid lightgrey;
+}
+
+#user {
+    padding: 0;
+    background: black;
+}
+
+
+ul {
+    padding: 0px 10px;
+    margin: 0px;
+    overflow-y: scroll;
+}
+
+li {
+    text-height: 125%;
+    list-style-type: none;
+    padding: 0px;
+    margin: 10px 0px;
+}
+
+
+#contact-list {
+    height: calc(100% - 105px);
+}
+
+#contact-list li {
+    border-bottom: 1px solid lightgrey;
+}
+
+#sidebar-buttons {
+    position: relative;
+    bottom: 0;
+}
+
+#chat {
+    width: calc(70%);
+    float: right;
+    height: 100%;
+    margin-right: 5%;
+    padding-top: 0;
+}
+
+#chat-text {
+    position: absolute;
+    top: 150px;
+    bottom: 70px;
+    margin-right: 5%;
+    text-align: justify;
+}
+
+#chat-input {
+    position: absolute;
+    bottom: 10px;
+    width: calc(70% - 60px);
+}
+
+#chat-input-text {
+    width: calc(100% - 100px);
+    float: left;
+    margin-right: 5px;
+}
+
+#chat-buttons button {
+    height: 30px;
+    width: 30px;
+}
+
+#footer {
+    margin-top: 10px;
+    float: left;
+}

@@ -164,9 +164,14 @@ function connectClicked()
         return;
     }
     
-    $('#connect-dialog-address').removeClass('.ui-state-error');
-    $('#connect-dialog').dialog('close');
-    setInterval(update, UPDATE_INTERVAL);
+    update();
+    if (tox.connected)
+    {
+        $('#connect-dialog-address').removeClass('.ui-state-error');
+        $('#connect-dialog').dialog('close');
+        $('#credentials-dialog-tox-id').html(tox.getId());
+        setInterval(update, UPDATE_INTERVAL);
+    }
 }
 
 function cleanup()

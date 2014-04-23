@@ -165,7 +165,7 @@ INCLUDES=																					\
 FUNCTIONS=${shell grep EXPORT_THIS $(MAIN_SOURCE) | sed -n "s/.*\s\(.*\)(.*/'_\1',/p"}
 EXP_FUNCS=-s EXPORTED_FUNCTIONS="[$(FUNCTIONS)]"
 
-CFLAGS=-O2 -Wall #-s VERBOSE=1
+CFLAGS=-O2 -Wall -DDEBUG #-s VERBOSE=1
 
 BC_OBJECTS=$(SOURCES:.c=.bc)
 

@@ -20,13 +20,19 @@
  * 
  */
 
+#ifdef DEBUG
+#define DEBUG_PRINT(...) fprintf( stderr, __VA_ARGS__ );
+#else
+#define DEBUG_PRINT(...) ;
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <emscripten.h>
 #include <tox.h>
 
-#include "misc_tools.c"
+#include "toxtools.c"
 
 #define WAITPERIOD 100 //ms
 #define EXPORT_THIS EMSCRIPTEN_KEEPALIVE 
@@ -34,7 +40,8 @@
 
 Tox * tox;
 uint8_t * tox_data;
-uint8_t tmp_client_id[TOX_CLIENT_ID_SIZE + 1] = {0};
+char * tmp_string[2000] = {0};
+uint8_t tmp_client_id[TOX_FRIEND_ADDRESS_SIZE + 1] = {0};
 uint8_t tmp_name[TOX_MAX_NAME_LENGTH + 1];
 uint8_t tmp_status[TOX_MAX_STATUSMESSAGE_LENGTH + 1];
 uint8_t tmp_message[TOX_MAX_MESSAGE_LENGTH + 1];
@@ -43,12 +50,12 @@ uint8_t tmp_message[TOX_MAX_MESSAGE_LENGTH + 1];
 
 void srandom(unsigned int seed)
 {
-    printf("srandom stub called\n");
+    DEBUG_PRINT("srandom stub called\n");
 }
 
 int getsockopt(int sockfd, int level, int optname, void * optval, socklen_t * optlen)
 {
-    printf("getsockopt stub called\n");
+    DEBUG_PRINT("getsockopt stub called\n");
     return 0;
 }
 
@@ -86,10 +93,14 @@ EXPORT_THIS int update()
 {  
     int ret = 1;
     ret &= tox_wait_prepare(tox, tox_data);
-    ret &= tox_wait_execute(tox_data, 0, WAITPERIOD * 1000);
+    DEBUG_PRINT("prep: %d\n", ret);
+    ret &= (tox_wait_execute(tox_data, 0, WAITPERIOD * 1000) > 0);
+    DEBUG_PRINT("exec: %d\n", ret);
     ret &= tox_wait_cleanup(tox, tox_data);
+    DEBUG_PRINT("clean: %d\n", ret);
     tox_do(tox);
     ret &= tox_isconnected(tox);
+    DEBUG_PRINT("conn: %d\n", ret);
     return ret;
 }
 
@@ -98,7 +109,7 @@ EXPORT_THIS int setup()
     tox = tox_new(0);
     if (!tox)
     {
-        printf("Failed to allocate Messenger datastructure");
+        DEBUG_PRINT("Failed to allocate Messenger datastructure");
         return 1;
     }
     
@@ -124,7 +135,9 @@ EXPORT_THIS int bootstrap(char * address, int port, char * key)
 EXPORT_THIS char * getId()
 {
     tox_get_address(tox, tmp_client_id);
-    return tmp_client_id;
+    fraddr_to_str(tmp_client_id, tmp_string);
+    tmp_client_id[TOX_FRIEND_ADDRESS_SIZE] = 0;
+    return tmp_string;
 }
 
 EXPORT_THIS void cleanup()
@@ -151,13 +164,13 @@ EXPORT_THIS int sendMessage(char * id, char * msg)
 
 EXPORT_THIS int setName(char * name)
 {
-    return tox_set_name(tox, name, strlen(name));
+    return tox_set_name(tox, name, strlen(name)) == 0;
 }
 
 EXPORT_THIS char * getName()
 {
     uint16_t n = tox_get_self_name(tox, tmp_name);
-    tmp_name[n + 1] = 0;
+    tmp_name[n] = 0;
     return tmp_name;
 }
 

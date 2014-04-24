@@ -165,7 +165,7 @@ function setupTox()
     tox.connected = false;
     tox.setup();
     
-    tox.bootstrapFromList();
+    //~ tox.bootstrapFromList();
     update();
     if (tox.connected)
         setInterval(update, UPDATE_INTERVAL);

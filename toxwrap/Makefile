@@ -173,7 +173,8 @@ BC_OBJECTS=$(SOURCES:.c=.bc)
 	emcc $(CFLAGS) $(INCLUDES) $< -o $@
 
 $(OUTPUT_JS): $(MAIN_SOURCE) $(BC_OBJECTS) data/DHTnodes Makefile
-	emcc $(CFLAGS) $(EXP_FUNCS) $(INCLUDES) --preload-file data $(BC_OBJECTS) $(MAIN_SOURCE) -o $(OUTPUT_JS)
+	emcc $(CFLAGS) $(EXP_FUNCS) $(INCLUDES) $(BC_OBJECTS) $(MAIN_SOURCE) -o $(OUTPUT_JS)
+	#emcc $(CFLAGS) $(EXP_FUNCS) $(INCLUDES) --preload-file data $(BC_OBJECTS) $(MAIN_SOURCE) -o $(OUTPUT_JS)
 
 data/DHTnodes:
 	mkdir -p data

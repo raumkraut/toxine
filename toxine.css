@@ -104,7 +104,6 @@ hr {
     float: left;
     width: 20%;
     height: calc(110% - 120px);
-    margin-right: 10px;
 }
 
 #sidebar * a {
@@ -164,7 +163,7 @@ li {
 }
 
 #chat {
-    width: calc(70%);
+    width: 70%;
     float: right;
     height: 100%;
     margin-right: 5%;
@@ -175,25 +174,20 @@ li {
     position: absolute;
     top: 150px;
     bottom: 70px;
-    margin-right: 5%;
     text-align: justify;
+    width: 65%;
 }
 
 #chat-input {
     position: absolute;
     bottom: 10px;
-    width: calc(70% - 60px);
+    width: 65%;
 }
 
 #chat-input-text {
     width: calc(100% - 100px);
     float: left;
     margin-right: 5px;
-}
-
-#chat-buttons button {
-    height: 30px;
-    width: 30px;
 }
 
 #footer {

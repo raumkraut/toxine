@@ -7,6 +7,7 @@
 [submodule "toxcore"]
 	path = toxcore
 	url = https://github.com/irungentoo/ProjectTox-Core.git
+	branch = TCP
 [submodule "whammy"]
 	path = whammy
 	url = https://github.com/antimatter15/whammy

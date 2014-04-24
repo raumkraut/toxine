@@ -186,5 +186,8 @@ clean:
 nm:
 	llvm-nm $(BC_OBJECTS)
 
+print_exported:
+	@echo $(FUNCTIONS)
+
 all: $(OUTPUT_JS)
 

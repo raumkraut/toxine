@@ -196,8 +196,10 @@ static uint8_t keys[][TOX_CLIENT_ID_SIZE] = {
 
 int init_connection_helper(Tox *m, int line)
 {
-    return tox_bootstrap_from_address(m, nodes[line], TOX_ENABLE_IPV6_DEFAULT,
+    int ret = tox_bootstrap_from_address(m, nodes[line], TOX_ENABLE_IPV6_DEFAULT,
                                       ports[line], keys[line]);
+    DEBUG_PRINT("Connecting to %s returned: %d\n", nodes[line], ret);
+    return ret;
 }
 
 /* Connects to a random DHT node listed in the DHTnodes file

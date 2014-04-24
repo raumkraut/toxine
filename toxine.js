@@ -152,7 +152,7 @@ function setupTox()
     tox.bootstrap = Module.cwrap('bootstrap', 'boolean', ['string', 'number', 'string']);
     tox.cleanup = Module.cwrap('cleanup'); 
     
-    tox.getId = Module.cwrap('getId', 'string');
+    //tox.getId = Module.cwrap('getId', 'string');
 
     tox.addContact =    Module.cwrap('addContact',    'boolean', ['string', 'string']);
     tox.removeContact = Module.cwrap('removeContact', 'boolean', ['string']);
@@ -180,4 +180,31 @@ function cleanup()
 function update()
 {
     tox.connected = tox.update();
+}
+
+function idToHexString(id)
+{
+    ret = []
+    for (i = 0; i < id.length; i++)
+        ret[i] = id.charCodeAt(i).toString(16);
+    return ret.toUpperCase();
+} 
+
+function hexStringToId(str)
+{
+    // remove whitespace
+    str = str.replace(/\s+/g, '');
+    ret = []
+    // group in pairs of hex digits
+    pairs = str.match(/../g)
+    for (i = 0; i < pairs.length; i++)
+    {
+        ret[i] = parseInt(pairs[i], 16);
+        if (ret[i] == NaN)
+        {
+            console.log('Error parsing hex string: %s', str);
+            return false;
+        }
+    }
+    return ret;
 }

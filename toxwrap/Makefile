@@ -1,6 +1,7 @@
 TOXCORE_SOURCES= 															\
 	toxcore/tox.c															\
 	toxcore/assoc.c 														\
+	toxcore/crypto_core.c													\
 	toxcore/friend_requests.c												\
 	toxcore/LAN_discovery.c 												\
 	toxcore/Messenger.c 													\
@@ -150,9 +151,9 @@ LIBSODIUM_SOURCES=																			\
 	libsodium/sodium/utils.c                                                                \
 	libsodium/sodium/version.c                                                              
 
-SOURCES = $(TOXCORE_SOURCES) $(LIBSODIUM_SOURCES) toxtools.c
+SOURCES = $(TOXCORE_SOURCES) $(LIBSODIUM_SOURCES)
 
-MAIN_SOURCE = tox.c
+MAIN_SOURCE = tox.cpp
 
 OUTPUT_JS = ../tox.js
 
@@ -162,10 +163,7 @@ INCLUDES=																					\
 	-Itoxcore																				\
 	-include sodiumdefines.h
 
-FUNCTIONS=${shell grep EXPORT_THIS $(MAIN_SOURCE) | sed -n "s/.*\s\(.*\)(.*/'_\1',/p"}
-EXP_FUNCS=-s EXPORTED_FUNCTIONS="[$(FUNCTIONS)]"
-
-CFLAGS=-O2 -Wall -DDEBUG #-s VERBOSE=1
+CFLAGS=-O2 -Wall --bind -DDEBUG #-s VERBOSE=1
 
 BC_OBJECTS=$(SOURCES:.c=.bc)
 
@@ -174,20 +172,9 @@ BC_OBJECTS=$(SOURCES:.c=.bc)
 
 $(OUTPUT_JS): $(MAIN_SOURCE) $(BC_OBJECTS) data/DHTnodes Makefile
 	emcc $(CFLAGS) $(EXP_FUNCS) $(INCLUDES) $(BC_OBJECTS) $(MAIN_SOURCE) -o $(OUTPUT_JS)
-	#emcc $(CFLAGS) $(EXP_FUNCS) $(INCLUDES) --preload-file data $(BC_OBJECTS) $(MAIN_SOURCE) -o $(OUTPUT_JS)
-
-data/DHTnodes:
-	mkdir -p data
-	wget -O data/DHTnodes http://stupiddog.soupwhale.com/files/tox/dht/DHTnodes
 
 clean:
-	rm -f $(OUTPUT_JS) $(BC_OBJECTS) $(O_OBJECTS) $(DL_DATA)
-
-nm:
-	llvm-nm $(BC_OBJECTS)
-
-print_exported:
-	@echo $(FUNCTIONS)
+	rm -f $(OUTPUT_JS) $(BC_OBJECTS)
 
 all: $(OUTPUT_JS)
 

@@ -144,28 +144,13 @@ function setupUI()
 
 function setupTox()
 {
-    tox = new Object();
-
-    tox.setup =   Module.cwrap('setup',     'boolean');
-    tox.update =  Module.cwrap('update',    'boolean');
-    tox.bootstrapFromList = Module.cwrap('bootstrapFromList', 'boolean');
-    tox.bootstrap = Module.cwrap('bootstrap', 'boolean', ['string', 'number', 'string']);
-    tox.cleanup = Module.cwrap('cleanup'); 
-    
-    //tox.getId = Module.cwrap('getId', 'string');
-
-    tox.addContact =    Module.cwrap('addContact',    'boolean', ['string', 'string']);
-    tox.removeContact = Module.cwrap('removeContact', 'boolean', ['string']);
-    
-    tox.sendMessage = Module.cwrap('sendMessage', 'boolean', ['string', 'string']);
-
-    tox.setName = Module.cwrap('setName', 'boolean', ['string']);
-    tox.getName = Module.cwrap('getName', 'string');
+    tox = Module;
     
     tox.connected = false;
     tox.setup();
     
-    //~ tox.bootstrapFromList();
+    var hexid = '051B599C255428ABA13DCC3728B22291799C9CBC1081C5AD0B1F972C787E6562';
+    tox.bootstrap('127.0.0.1', 33445, hexid);
     update();
     if (tox.connected)
         setInterval(update, UPDATE_INTERVAL);
@@ -186,8 +171,8 @@ function idToHexString(id)
 {
     ret = []
     for (i = 0; i < id.length; i++)
-        ret[i] = id.charCodeAt(i).toString(16);
-    return ret.toUpperCase();
+        ret[i] = id.charCodeAt(i).toString(16).toUpperCase();
+    return ret;
 } 
 
 function hexStringToId(str)

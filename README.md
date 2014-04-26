@@ -1,11 +1,9 @@
 **Toxine** is a browser-based client for the [Tox][1] network.
 
-It's written in C, javascript, html and css.
-
 **Toxine is in early development stage: not functional yet**
 
-Text chat is supported by most modern browsers, other features, when implemented, might demand
-recent versions.
+The program is written in C++ and javascript and runs clientside. Text chat is supported by most
+modern browsers, other features, when implemented, might demand recent versions.
 
 Try the [demo at **http://toxi.in**][2]!
 

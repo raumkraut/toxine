@@ -43,12 +43,14 @@ extern "C"
 #define WAITPERIOD 100 //ms
 #define STRING_MAX_LENGTH 2000
 
+using std::string;
+using std::vector;
 typedef std::basic_string<unsigned char> ustring;
 
 struct Contact
 {
     int     _fn;
-    std::string id;
+    string id;
     ustring name;
     ustring status_message;
     int     status;
@@ -58,7 +60,7 @@ struct Contact
 Tox  * tox = NULL;
 uint8_t * tox_data = NULL;
 
-std::vector<Contact> contacts;
+vector<Contact> contacts;
 
 uint8_t tmp_id[TOX_CLIENT_ID_SIZE];
 uint8_t tmp_name[TOX_MAX_NAME_LENGTH];
@@ -96,7 +98,7 @@ void contact_changed(int i)
     EM_ASM(tox.onProfileChanged($0), i);
 }
 
-uint8_t * hexstr_to_id(std::string hexstr)
+uint8_t * hexstr_to_id(string hexstr)
 {
     const char * cstr = hexstr.c_str();
     int id_len = std::max((int)hexstr.length() / 2, TOX_CLIENT_ID_SIZE);
@@ -108,7 +110,7 @@ uint8_t * hexstr_to_id(std::string hexstr)
     return tmp_id;
 }
 
-std::string id_to_hexstr(const uint8_t * id)
+string id_to_hexstr(const uint8_t * id)
 {
     char hexstr[2 * TOX_CLIENT_ID_SIZE];
     char * chex = hexstr;
@@ -117,7 +119,7 @@ std::string id_to_hexstr(const uint8_t * id)
         sprintf(chex, "%02X", id[i]);
         chex += 2 * sizeof(char);
     }
-    return std::string(hexstr, 2 * TOX_CLIENT_ID_SIZE);
+    return string(hexstr, 2 * TOX_CLIENT_ID_SIZE);
 }
 
 /* Actual callback functions, invoke JS code */
@@ -193,7 +195,7 @@ bool setup()
     return true;
 }
 
-bool bootstrap(std::string address, int port, std::string id)
+bool bootstrap(string address, int port, string id)
 {
     return tox_bootstrap_from_address(tox, address.c_str(), TOX_ENABLE_IPV6_DEFAULT, htons(port), hexstr_to_id(id));
 }
@@ -205,7 +207,7 @@ void cleanup()
         free(tox_data);
 }
 
-bool addContact(std::string id, ustring msg)
+bool addContact(string id, ustring msg)
 {
     /* tox-core isn't const-correct, ugly cast is necessary */
     uint8_t * cstr = (uint8_t *)msg.c_str();
@@ -224,7 +226,7 @@ bool sendMessage(int i, ustring msg)
     return tox_send_message(tox, contacts[i]._fn, cstr, msg.length());
 }
 
-std::string getId()
+string getId()
 {
     tox_get_address(tox, tmp_id);
     return id_to_hexstr(tmp_id);
@@ -270,7 +272,7 @@ int getStatus()
     return tox_get_self_user_status(tox);
 }
 
-std::vector<Contact> getContacts()
+const vector<Contact> & getContacts()
 {
     int n = tox_count_friendlist(tox);
     int * fn = new int[n];
@@ -308,24 +310,43 @@ std::vector<Contact> getContacts()
     return contacts;
 }
 
-/* TODO
-int tox_size(Tox *tox);
+const ustring & save(ustring key)
+{
+    int size;
+    if (!key.empty())
+        size = tox_size_encrypted(tox);
+    else
+        size = tox_size(tox);
+        
+    uint8_t * data = new uint8_t[size];
+    
+    if (!key.empty()) /* tox-core isn't const-correct, ugly cast is necessary */
+        tox_save_encrypted(tox, data, (uint8_t *)key.c_str(), key.length());
+    else
+        tox_save(tox, data);
+    
+    ustring ret = ustring(data, size);
+    return ret;
+}
 
-void tox_save(Tox *tox, uint8_t *data);
-
-int tox_load(Tox *tox, uint8_t *data, int length);
-
-int tox_size_encrypted(Tox *tox);
-
-int tox_save_encrypted(Tox *tox, uint8_t *data, uint8_t *key, uint16_t key_length);
-
-int tox_load_encrypted(Tox *tox, uint8_t *data, int length, uint8_t *key, uint16_t key_length);
-*/
+bool load(const ustring & datastr, ustring key)
+{
+    int ret;
+    /* tox-core isn't const-correct, ugly cast is necessary */
+    uint8_t * data = (uint8_t *)datastr.c_str();
+    if (!key.empty()) /* tox-core isn't const-correct, ugly cast is necessary */
+        ret = tox_load_encrypted(tox, data, datastr.length(), (uint8_t *)key.c_str(), key.length());
+    else
+        ret = tox_load(tox, data, datastr.length());
+    
+    return ret == 0;
+}
 
 using namespace emscripten;
 
 EMSCRIPTEN_BINDINGS(tox)
 {
+    register_vector<Contact>("Contacts");
     value_object<Contact>("Contact")
         .field("id", &Contact::id)
         .field("name", &Contact::name)
@@ -346,4 +367,6 @@ EMSCRIPTEN_BINDINGS(tox)
     function("getStatus", &getStatus);
     function("setStatus", &setStatus);
     function("getContacts", &getContacts);
+    function("save", &save);
+    function("load", &load);
 }

@@ -70,6 +70,7 @@ function setup()
 
 function setupUI()
 {  
+    console.log('Setting up UI');
     /** ADD/REMOVE CONTACTS */
     $('#add-contact-dialog').dialog(
     {
@@ -146,19 +147,48 @@ function setupTox()
 {
     tox = Module;
     
-    tox.connected = false;
-    tox.setup();
+    loadOrSetup();
     $('#profile-dialog-tox-id').html(tox.getId());
     
+    console.log('Connecting to boostrap node(s)');
+    tox.connected = false;
     var hexid = '051B599C255428ABA13DCC3728B22291799C9CBC1081C5AD0B1F972C787E6562';
     tox.bootstrap('127.0.0.1', 33445, hexid);
     update();
     if (tox.connected)
+    {
+        console.log('Connected, updating every', UPDATE_INTERVAL, 'ms');
         setInterval(update, UPDATE_INTERVAL);
+    }
+}
+
+function save()
+{
+    console.log('Saving credentials');
+    var data = tox.save('');
+    localStorage.setItem('encrypted', false);
+    localStorage.setItem('data', data);
+}
+
+function loadOrSetup()
+{
+    var encrypted = localStorage.getItem('encrypted');
+    var data = localStorage.getItem('data');
+    if (data == null)
+    {
+        console.log('No saved credentials found, creating new ones');
+        console.log('This may take up to a couple minutes');
+        var ret = tox.setup();
+        save();
+        return ret;
+    }
+    console.log('Loading existing credentials');
+    return tox.load(data, '');
 }
 
 function cleanup()
 {
+    console.log('Exiting');
     if (tox)
         tox.cleanup();
 }

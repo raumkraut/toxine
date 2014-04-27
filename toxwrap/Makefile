@@ -152,6 +152,8 @@ LIBSODIUM_SOURCES=																			\
 
 SOURCES = $(TOXCORE_SOURCES) $(LIBSODIUM_SOURCES)
 
+EMCC=EMCC_FAST_COMPILER=0 emcc
+
 MAIN_SOURCE = tox.cpp
 
 OUTPUT_JS = ../tox.js
@@ -167,10 +169,10 @@ CFLAGS=-O2 -Wall --bind -DDEBUG -funsigned-char #-s VERBOSE=1
 BC_OBJECTS=$(SOURCES:.c=.bc)
 
 %.bc: %.c
-	emcc $(CFLAGS) $(INCLUDES) $< -o $@
+	$(EMCC) $(CFLAGS) $(INCLUDES) $< -o $@
 
 $(OUTPUT_JS): $(MAIN_SOURCE) $(BC_OBJECTS) data/DHTnodes Makefile
-	emcc $(CFLAGS) $(EXP_FUNCS) $(INCLUDES) $(BC_OBJECTS) $(MAIN_SOURCE) -o $(OUTPUT_JS)
+	$(EMCC) $(CFLAGS) $(EXP_FUNCS) $(INCLUDES) $(BC_OBJECTS) $(MAIN_SOURCE) -o $(OUTPUT_JS)
 
 clean:
 	rm -f $(OUTPUT_JS) $(BC_OBJECTS)

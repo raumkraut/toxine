@@ -148,6 +148,7 @@ function setupTox()
     
     tox.connected = false;
     tox.setup();
+    $('#profile-dialog-tox-id').html(tox.getId());
     
     var hexid = '051B599C255428ABA13DCC3728B22291799C9CBC1081C5AD0B1F972C787E6562';
     tox.bootstrap('127.0.0.1', 33445, hexid);

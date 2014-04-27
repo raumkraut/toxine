@@ -35,9 +35,9 @@ extern "C"
 }
 
 #ifdef DEBUG
-#define DEBUG_PRINT(...) fprintf( stderr, __VA_ARGS__ );
+#define DEBUG_PRINT(...) fprintf( stderr, __VA_ARGS__ )
 #else
-#define DEBUG_PRINT(...) ;
+#define DEBUG_PRINT(...) {}
 #endif
 
 #define WAITPERIOD 100 //ms
@@ -45,20 +45,20 @@ extern "C"
 
 using std::string;
 using std::vector;
-typedef std::basic_string<unsigned char> ustring;
 
 struct Contact
 {
     int     _fn;
     string id;
-    ustring name;
-    ustring status_message;
+    string name;
+    string status_message;
     int     status;
     time_t  last_online;
 };
 
 Tox  * tox = NULL;
 uint8_t * tox_data = NULL;
+uint8_t * tmp_data = NULL;
 
 vector<Contact> contacts;
 
@@ -98,28 +98,45 @@ void contact_changed(int i)
     EM_ASM(tox.onProfileChanged($0), i);
 }
 
-uint8_t * hexstr_to_id(string hexstr)
+uint8_t * hexstr_to_data(string hexstr)
 {
+    int outlen = hexstr.length() / 2;
+    if (tmp_data)
+        delete[] tmp_data;
+    tmp_data = new uint8_t[outlen];
     const char * cstr = hexstr.c_str();
-    int id_len = std::max((int)hexstr.length() / 2, TOX_CLIENT_ID_SIZE);
-    for(int i = 0; i < id_len; i++)
+    for(int i = 0; i < outlen; i++)
     {
-        sscanf(cstr, "%2hhx", tmp_id[i]);
+        // Workaround for emscripten bug #2322
+        unsigned int byte;
+        if (sscanf(cstr, "%2x", &byte) < 1)
+            DEBUG_PRINT("Bad hexstring: %s\n", cstr);
+        tmp_data[i] = byte;
         cstr += 2 * sizeof(uint8_t);
     }
-    return tmp_id;
+    return tmp_data;
+}
+
+uint8_t * hexstr_to_id(string hexstr)
+{
+    return hexstr_to_data(hexstr);
+}
+
+string data_to_hexstr(const uint8_t * data, int inlen)
+{
+    char hexstr[2 * inlen];
+    char * chex = hexstr;
+    for (int i = 0; i < inlen; i++)
+    {
+        sprintf(chex, "%02X", data[i]);
+        chex += 2 * sizeof(char);
+    }
+    return string(hexstr, 2 * inlen);
 }
 
 string id_to_hexstr(const uint8_t * id)
 {
-    char hexstr[2 * TOX_CLIENT_ID_SIZE];
-    char * chex = hexstr;
-    for (int i = 0; i < TOX_CLIENT_ID_SIZE; i++)
-    {
-        sprintf(chex, "%02X", id[i]);
-        chex += 2 * sizeof(char);
-    }
-    return string(hexstr, 2 * TOX_CLIENT_ID_SIZE);
+    return data_to_hexstr(id, TOX_FRIEND_ADDRESS_SIZE);
 }
 
 /* Actual callback functions, invoke JS code */
@@ -135,21 +152,21 @@ extern "C"
     void friend_message(Tox * tox, int fn, uint8_t * msg, uint16_t length, void *)
     {
         int i = find_in_contacts(fn);
-        DEBUG_PRINT("Message from friend %d: %s\n", i, ustring(msg, length).c_str());
-        EM_ASM(tox.onMessage($0, '$1'), i, ustring(msg, length));
+        DEBUG_PRINT("Message from friend %d: %s\n", i, string((char *)msg, length).c_str());
+        EM_ASM(tox.onMessage($0, '$1'), i, string((char *)msg, length));
     }
 
     void name_change(Tox * tox, int fn, uint8_t * name, uint16_t length, void *)
     {
         int i = find_in_contacts(fn);
-        contacts[i].name = ustring(name, length);
+        contacts[i].name = string((char *)name, length);
         contact_changed(i);
     }
 
     void status_message(Tox * tox, int fn, uint8_t * msg, uint16_t length, void * d)
     {
         int i = find_in_contacts(fn);
-        contacts[i].status_message = ustring(msg, length);
+        contacts[i].status_message = string((char *)msg, length);
         contact_changed(i);
     }
 }
@@ -204,10 +221,12 @@ void cleanup()
 {
     tox_kill(tox);
     if (tox_data)
-        free(tox_data);
+        delete[] tox_data;
+    if (tmp_data)
+        delete[] tmp_data;
 }
 
-bool addContact(string id, ustring msg)
+bool addContact(string id, string msg)
 {
     /* tox-core isn't const-correct, ugly cast is necessary */
     uint8_t * cstr = (uint8_t *)msg.c_str();
@@ -219,7 +238,7 @@ bool removeContact(int i)
     return tox_del_friend(tox, contacts[i]._fn);
 }
 
-bool sendMessage(int i, ustring msg)
+bool sendMessage(int i, string msg)
 {
     /* tox-core isn't const-correct, ugly cast is necessary */
     uint8_t * cstr = (uint8_t *)msg.c_str();
@@ -232,33 +251,38 @@ string getId()
     return id_to_hexstr(tmp_id);
 }
 
-bool setName(ustring name)
+bool setName(string name)
 {
     /* tox-core isn't const-correct, ugly cast is necessary */
     return tox_set_name(tox, (uint8_t *)name.c_str(), name.length()) >= 0;
 }
 
-ustring getName()
+string getName()
 {
     uint16_t n = tox_get_self_name(tox, tmp_name);
-    return ustring(tmp_name, n);
+    return string((char *)tmp_name, n);
 }
 
-bool setStatusMessage(ustring msg)
+bool setStatusMessage(string msg)
 {
     /* tox-core isn't const-correct, ugly cast is necessary */
     return tox_set_status_message(tox, (uint8_t *)msg.c_str(), msg.length()) >= 0;
 }
 
-ustring getStatusMessage()
+string getStatusMessage()
 {
     int n = tox_get_self_status_message(tox, tmp_status_message, TOX_MAX_STATUSMESSAGE_LENGTH);
     if (n < 0)
     {
         DEBUG_PRINT("Error getting status message");
-        return ustring();
+        return string();
     }
-    return ustring(tmp_status_message, n);
+    return string((char *)tmp_status_message, n);
+}
+
+bool setTyping(int contact, bool typing)
+{
+    return tox_set_user_is_typing(tox, find_in_contacts(contact), typing) >= 0;
 }
 
 /* none, away, busy */
@@ -290,12 +314,12 @@ const vector<Contact> & getContacts()
         len = tox_get_name(tox, fn[i], tmp_name);
         if (len < 0)
             DEBUG_PRINT("Error getting name for friend %d\n", fn[i]);
-        contacts[i].name = ustring(tmp_name, len);
+        contacts[i].name = string((char *)tmp_name, len);
         
         len = tox_get_status_message(tox, fn[i], tmp_status_message, TOX_MAX_STATUSMESSAGE_LENGTH);
         if (len < 0)
             DEBUG_PRINT("Error getting status message for friend %d\n", fn[i]);
-        contacts[i].status_message = ustring(tmp_status_message, len);
+        contacts[i].status_message = string((char *)tmp_status_message, len);
         
         contacts[i].status = tox_get_user_status(tox, fn[i]);
         if (contacts[i].status < 0)
@@ -306,38 +330,41 @@ const vector<Contact> & getContacts()
             DEBUG_PRINT("Error getting last online time for friend %d\n", fn[i]);
     }
     
-    delete fn;
+    delete[] fn;
     return contacts;
 }
 
-const ustring & save(ustring key)
+string save(string key)
 {
     int size;
     if (!key.empty())
         size = tox_size_encrypted(tox);
     else
         size = tox_size(tox);
-        
-    uint8_t * data = new uint8_t[size];
+    
+    if (tmp_data)
+        delete[] tmp_data;
+    uint8_t * tmp_data = new uint8_t[size];
     
     if (!key.empty()) /* tox-core isn't const-correct, ugly cast is necessary */
-        tox_save_encrypted(tox, data, (uint8_t *)key.c_str(), key.length());
+        tox_save_encrypted(tox, tmp_data, (uint8_t *)key.c_str(), key.length());
     else
-        tox_save(tox, data);
+        tox_save(tox, tmp_data);
     
-    ustring ret = ustring(data, size);
+    string ret = data_to_hexstr(tmp_data, size);
+    delete[] tmp_data;
     return ret;
 }
 
-bool load(const ustring & datastr, ustring key)
+bool load(const string datastr, string key)
 {
     int ret;
     /* tox-core isn't const-correct, ugly cast is necessary */
-    uint8_t * data = (uint8_t *)datastr.c_str();
+    uint8_t * data = hexstr_to_data(datastr);
     if (!key.empty()) /* tox-core isn't const-correct, ugly cast is necessary */
-        ret = tox_load_encrypted(tox, data, datastr.length(), (uint8_t *)key.c_str(), key.length());
+        ret = tox_load_encrypted(tox, data, datastr.length() / 2, (uint8_t *)key.c_str(), key.length());
     else
-        ret = tox_load(tox, data, datastr.length());
+        ret = tox_load(tox, data, datastr.length() / 2);
     
     return ret == 0;
 }

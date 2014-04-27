@@ -192,9 +192,21 @@ bool update()
     return ret;
 }
 
+void cleanup()
+{
+    tox_kill(tox);
+    if (tox_data)
+        delete[] tox_data;
+    if (tmp_data)
+        delete[] tmp_data;
+}
+
 bool setup()
 {
-    tox = tox_new(0);
+    if (tox)
+        cleanup();
+        
+    tox = tox_new(TOX_ENABLE_IPV6_DEFAULT);
     if (!tox)
     {
         DEBUG_PRINT("Failed to allocate Messenger datastructure");
@@ -215,15 +227,6 @@ bool setup()
 bool bootstrap(string address, int port, string id)
 {
     return tox_bootstrap_from_address(tox, address.c_str(), TOX_ENABLE_IPV6_DEFAULT, htons(port), hexstr_to_id(id));
-}
-
-void cleanup()
-{
-    tox_kill(tox);
-    if (tox_data)
-        delete[] tox_data;
-    if (tmp_data)
-        delete[] tmp_data;
 }
 
 bool addContact(string id, string msg)

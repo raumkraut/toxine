@@ -73,8 +73,6 @@
                 <input type='file' id='connect-dialog-data'
                     class='ui-widget-content ui-corner-all'>
                 </input>
-                <input type='checkbox' id='credentials-dialog-persistent' checked></input>
-                <label for='credentials-dialog-persistent'>Enable persistent storage</label>
                 <input type='checkbox' id='credentials-dialog-encrypt'></input>
                 <label for='credentials-dialog-encrypt'>Encrypt</label>
                 <a href='#' class='half' id='credentials-dialog-download'>Download credentials</a>
@@ -96,6 +94,11 @@
                         class='ui-widget-content ui-corner-all'
                         ></textarea>
                 </div>
+            </div>
+            <!-- Warning dialog -->
+            <div class='dialog' id='warning-dialog' title='Warning'>
+                <span class='ui-icon-alert ui-icon left'></span>
+                <p id='warning-dialog-text'></p>
             </div>
         </div>
         <!-------- SIDEBAR ------------>

@@ -25,6 +25,15 @@ const UPDATE_INTERVAL = 250; //milliseconds
 
 var tox = null;
 var flashTimeOut = null;
+var dhtNodes = null;
+
+$.ajax({
+    url: "https://kirara.ca/poison/Nodefile.json",
+    success: function(data)
+    {
+        dhtNodes = parseJSON(data)['servers'];
+    }
+});
 
 // Setup main entry points
 $(window).on('load', setup);
@@ -122,6 +131,7 @@ function setupUI()
                 function()
                 {
                     delete localStorage.data;
+                    showFlash('Credentials cleared');
                     loadOrNew();
                 });
         });

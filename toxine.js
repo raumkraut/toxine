@@ -24,7 +24,7 @@
 const UPDATE_INTERVAL = 250; //milliseconds
 
 var tox = null;
-var password = false;
+var password = null;
 
 // JS detected!
 $('#js-warning').hide();
@@ -75,12 +75,12 @@ function setupUI()
     /** ADD/REMOVE CONTACTS */
     $('#add-contact-dialog').dialog(
     {
-        width: '500px',
+        width: '400px',
         resizable: false,
         autoOpen: false,
         buttons: { 'Add': function() {  } }
     });
-    
+    $('#add-contact-dialog-id').css('font-family', 'monospace');
     $('#sidebar-add-contact').button({ icons: { primary:'ui-icon-plus' }, text: false })
         .click(function () { $('#add-contact-dialog').dialog('open'); });
     $('#add-contact-button').click(function () { $('#add-contact-dialog').dialog('open'); });
@@ -89,14 +89,20 @@ function setupUI()
     /** PROFILE */
     $('#profile-dialog').dialog(
     {
-        width: '500px',
+        width: '400px',
         resizable: false,
         autoOpen: false,
     });
     
-    $('#profile-dialog-copy').button({ icons: { primary:'ui-icon-clipboard' } });
+    $('#profile-dialog-id').css('font-family', 'monospace');
     $('#profile-dialog-qr').button();
-    $('#profile-dialog-nospam').button({ icons: { primary:'ui-icon-arrowrefresh-1-s' } });
+    $('#profile-dialog-nospam').button({ icons: { secondary:'ui-icon-arrowrefresh-1-s' } })
+        .click(function()
+        {
+            tox.changeNospam();
+            saveUI();
+            $('#profile-dialog-id').html(tox.getId());
+        });
     
     $('#sidebar-profile').button({ icons: { primary:'ui-icon-person' }, text: false })
         .click(function () { $('#profile-dialog').dialog('open'); });
@@ -104,7 +110,7 @@ function setupUI()
     /** CREDENTIALS */
     $('#credentials-dialog').dialog(
     {
-        width: '500px',
+        width: '400px',
         modal: true,
         resizable: false,
         autoOpen: false,
@@ -131,7 +137,7 @@ function setupUI()
     $('#settings-dialog-port').spinner();
     $('#settings-dialog').dialog(
     {
-        width: '500px',
+        width: '400px',
         modal: true,
         resizable: false,
         autoOpen: false,
@@ -161,8 +167,24 @@ function setupUI()
     });
     
     /** SIDEBAR & CONTACT LIST */
-    $('#user-name').editable();
-    $('#user-status').editable();
+    $('#user-name').editable(function(value)
+    {
+        value = $.trim(value);
+        tox.setName(value);
+        saveUI();
+        if (!value)
+            return "Your username...";
+        return value;
+    });
+    $('#user-statusmessage').editable(function(value)
+    {
+        value = $.trim(value);
+        tox.setStatusMessage(value);
+        saveUI();
+        if (!value)
+            return "Set your status...";
+        return value;
+    });
     
     $('#sidebar-aliases').button({ icons: { primary:'ui-icon-tag' }, text: false });
     
@@ -200,7 +222,7 @@ function setupTox()
 
 function reset()
 {
-    $('#profile-dialog-tox-id').html(tox.getId());
+    $('#profile-dialog-id').html(tox.getId());
     
     console.log('Connecting to boostrap node(s)');
     tox.connected = false;
@@ -216,7 +238,7 @@ function reset()
 
 function saveUI()
 {
-    if (password == false)
+    if (password == null)
     {
         $('#password-dialog-text').html(
             'Enter a password for your new credentials, or click "Cancel" to not use a password:');
@@ -242,6 +264,8 @@ function saveUI()
     }
     else
         save();
+    $('#user-name').val(tox.getName());
+    $('#user-statusmessage').val(tox.getStatusMessage());
 }
 
 function save()
@@ -250,7 +274,7 @@ function save()
     if (!password)
     {
         password = '';
-        delete localStorage.encrypted;
+        localStorage.encrypted = false;
     }
     else
         localStorage.encrypted = true;
@@ -262,7 +286,12 @@ function loadOrNewUI()
 {
     var encrypted = localStorage.encrypted;
     var password = null;
-    if (encrypted)
+    if (!encrypted)
+    {
+        password = '';
+        loadOrNew();
+    }
+    else
     {
         $('#password-dialog-text').html('Enter the password of your credentials:');
         $('#password-dialog').dialog(
@@ -272,20 +301,16 @@ function loadOrNewUI()
                 'OK': function ()
                 {
                     password = $('#password-dialog').val();
-                    loadOrNew(password);
+                    loadOrNew();
                     $('#password-dialog').dialog('close');
                 }
             }
         }).dialog('open');
     }
-    else
-        loadOrNew(false);
 }
 
-function loadOrNew(password)
+function loadOrNew()
 {
-    if (!password)
-        password = '';
     var data = localStorage.data;
     
     console.log('Initializing tox, this may take up to a couple minutes');

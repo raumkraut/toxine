@@ -3,14 +3,13 @@
     <head>
         <title>Toxine</title>
         <meta content='text/html;charset=utf-8' http-equiv='Content-Type'>
-        <link href='http://fonts.googleapis.com/css?family=Oxygen:400,700' rel='stylesheet' type='text/css'>
-        <script src='resources/jquery.min.js'></script>
         <link rel='stylesheet' href='resources/jquery-ui.css' />
+        <link href='toxine.css' rel='stylesheet' type='text/css'>
+        <script src='resources/jquery.min.js'></script>
         <script src='resources/jquery-ui.min.js'></script>
         <script src='resources/jeditable.min.js'></script>
         <script src='toxine.js'></script>
         <script src='tox.js'></script>
-        <link href='toxine.css' rel='stylesheet' type='text/css'>
     </head>
 <!--
    toxine.html
@@ -43,7 +42,7 @@
             <div class='dialog' id='add-contact-dialog' title='Add a contact'>
                 <label for='add-contact-dialog-id'>Tox ID:</label>
                 <textarea id='add-contact-dialog-id'
-                    class='ui-widget-content ui-corner-all'
+                    class='ui-widget-content ui-corner-all toxid'
                     ></textarea>
                 <span class='ui-icon-tag ui-icon left'></span>
                 <label for='connect-dialog-alias'>Alias:</label>
@@ -57,12 +56,9 @@
             <!-- Profile dialog -->
             <div class='dialog' id='profile-dialog' title='Your profile'>
                 <span><b>Tox ID</b>(share for friends to add you)</span>
-                <textarea rows='3' id='profile-dialog-tox-id' disabled></textarea>
-                <div>
-                    <button class='half' id='profile-dialog-copy'>Copy to clipboard</button>
-                    <button class='half' id='profile-dialog-qr'>Generate QR code</button><br/>
-                </div>
-                <button class='half' id='profile-dialog-nospam'>New nospam code</button><br/>
+                <textarea rows='3' id='profile-dialog-id' class='toxid' disabled></textarea>
+                <button class='half' id='profile-dialog-qr' disabled>Generate QR code</button>
+                <button class='half' id='profile-dialog-nospam'>New nospam code</button>
             </div>
             <!-- Credentials dialog -->
             <div class='dialog' id='credentials-dialog' title='Your credentials'>
@@ -70,24 +66,24 @@
                 <span><b>Keep these files secret</b></span></br>
                 <label for='connect-dialog-data'>Upload credentials:</label>
                 <input type='file' id='connect-dialog-data'
-                    class='ui-widget-content ui-corner-all'>
+                    class='ui-widget-content ui-corner-all' disabled>
                 </input>
-                <a href='#' class='half' id='credentials-dialog-download'>Download credentials</a>
+                <a href='#' class='half' id='credentials-dialog-download' disabled>Download credentials</a>
                 <a href='#' class='half' id='credentials-dialog-clear'>Clear now</a>
             </div>
             <!-- Settings dialog -->
             <div class='dialog' id='settings-dialog' title='Advanced settings'>
-                <input type='checkbox' id='settings-dialog-custom'></input>
+                <input type='checkbox' id='settings-dialog-custom' disabled></input>
                 <label for='settings-dialog-custom'>Custom bootstrap node</label>
                 <div id='settings-dialog-custom-div'>
                     <label for='settings-dialog-address'>Address:</label>
                     <input type='text' id='settings-dialog-address'
-                        class='ui-widget-content ui-corner-all'></input>
+                        class='ui-widget-content ui-corner-all' disabled></input>
                     <label for='settings-dialog-port'>Port:</label>
                     <input type='text' id='settings-dialog-port'
-                        class='ui-corner-all' value='33445'></input>
+                        class='ui-corner-all' value='33445' disabled></input>
                     <label for='settings-dialog-key'>ID:</label>
-                    <textarea id='settings-dialog-id'
+                    <textarea id='settings-dialog-id' disabled
                         class='ui-widget-content ui-corner-all'
                         ></textarea>
                 </div>
@@ -127,7 +123,7 @@
         <!-------- CHAT ------------>
         <div id='chat'>
             <div id='chat-contact-name'>&nbsp;</div>
-            <div id='chat-contact-status'>Select a contact to start chatting</div>
+            <div id='chat-contact-statusmessage'>Select a contact to start chatting</div>
             <ul id='chat-text'>
             </ul>
             <div id='chat-input'>

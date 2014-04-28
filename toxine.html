@@ -5,10 +5,10 @@
         <meta content='text/html;charset=utf-8' http-equiv='Content-Type'>
         <link rel='stylesheet' href='resources/jquery-ui.css' />
         <link href='toxine.css' rel='stylesheet' type='text/css'>
-        <script src='toxine.js'></script>
         <script src='resources/jquery.min.js'></script>
         <script src='resources/jquery-ui.min.js'></script>
         <script src='resources/jeditable.min.js'></script>
+        <script src='toxine.js'></script>
         <script src='tox.js'></script>
     </head>
 <!--
@@ -42,7 +42,7 @@
             <div class='dialog' id='add-contact-dialog' title='Add a contact'>
                 <label for='add-contact-dialog-id'>Tox ID:</label>
                 <textarea id='add-contact-dialog-id'
-                    class='ui-widget-content ui-corner-all'
+                    class='ui-widget-content ui-corner-all toxid'
                     ></textarea>
                 <span class='ui-icon-tag ui-icon left'></span>
                 <label for='connect-dialog-alias'>Alias:</label>
@@ -56,12 +56,9 @@
             <!-- Profile dialog -->
             <div class='dialog' id='profile-dialog' title='Your profile'>
                 <span><b>Tox ID</b>(share for friends to add you)</span>
-                <textarea rows='3' id='profile-dialog-tox-id' disabled></textarea>
-                <div>
-                    <button class='half' id='profile-dialog-copy'>Copy to clipboard</button>
-                    <button class='half' id='profile-dialog-qr'>Generate QR code</button><br/>
-                </div>
-                <button class='half' id='profile-dialog-nospam'>New nospam code</button><br/>
+                <textarea rows='3' id='profile-dialog-id' class='toxid' disabled></textarea>
+                <button class='half' id='profile-dialog-qr'>Generate QR code</button>
+                <button class='half' id='profile-dialog-nospam'>New nospam code</button>
             </div>
             <!-- Credentials dialog -->
             <div class='dialog' id='credentials-dialog' title='Your credentials'>

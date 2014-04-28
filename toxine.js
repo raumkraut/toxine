@@ -75,12 +75,12 @@ function setupUI()
     /** ADD/REMOVE CONTACTS */
     $('#add-contact-dialog').dialog(
     {
-        width: '500px',
+        width: '400px',
         resizable: false,
         autoOpen: false,
         buttons: { 'Add': function() {  } }
     });
-    
+    $('#add-contact-dialog-id').css('font-family', 'monospace');
     $('#sidebar-add-contact').button({ icons: { primary:'ui-icon-plus' }, text: false })
         .click(function () { $('#add-contact-dialog').dialog('open'); });
     $('#add-contact-button').click(function () { $('#add-contact-dialog').dialog('open'); });
@@ -89,14 +89,19 @@ function setupUI()
     /** PROFILE */
     $('#profile-dialog').dialog(
     {
-        width: '500px',
+        width: '400px',
         resizable: false,
         autoOpen: false,
     });
     
-    $('#profile-dialog-copy').button({ icons: { primary:'ui-icon-clipboard' } });
+    $('#profile-dialog-id').css('font-family', 'monospace');
     $('#profile-dialog-qr').button();
-    $('#profile-dialog-nospam').button({ icons: { primary:'ui-icon-arrowrefresh-1-s' } });
+    $('#profile-dialog-nospam').button({ icons: { secondary:'ui-icon-arrowrefresh-1-s' } })
+        .click(function()
+        {
+            tox.changeNospam();
+            $('#profile-dialog-id').html(tox.getId());
+        });
     
     $('#sidebar-profile').button({ icons: { primary:'ui-icon-person' }, text: false })
         .click(function () { $('#profile-dialog').dialog('open'); });
@@ -104,7 +109,7 @@ function setupUI()
     /** CREDENTIALS */
     $('#credentials-dialog').dialog(
     {
-        width: '500px',
+        width: '400px',
         modal: true,
         resizable: false,
         autoOpen: false,
@@ -131,7 +136,7 @@ function setupUI()
     $('#settings-dialog-port').spinner();
     $('#settings-dialog').dialog(
     {
-        width: '500px',
+        width: '400px',
         modal: true,
         resizable: false,
         autoOpen: false,
@@ -200,7 +205,7 @@ function setupTox()
 
 function reset()
 {
-    $('#profile-dialog-tox-id').html(tox.getId());
+    $('#profile-dialog-id').html(tox.getId());
     
     console.log('Connecting to boostrap node(s)');
     tox.connected = false;

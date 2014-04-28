@@ -299,6 +299,11 @@ int getStatus()
     return tox_get_self_user_status(tox);
 }
 
+void changeNospam()
+{
+    tox_set_nospam(tox, rand());
+}
+
 const vector<Contact> & getContacts()
 {
     int n = tox_count_friendlist(tox);
@@ -389,6 +394,7 @@ EMSCRIPTEN_BINDINGS(tox)
     function("update", &update);
     function("addContact", &addContact);
     function("removeContact", &removeContact);
+    function("sendMessage", &sendMessage);
     function("getId", &getId);
     function("getName", &getName);
     function("setName", &setName);
@@ -396,6 +402,7 @@ EMSCRIPTEN_BINDINGS(tox)
     function("setStatusMessage", &setStatusMessage);
     function("getStatus", &getStatus);
     function("setStatus", &setStatus);
+    function("changeNospam", &changeNospam);
     function("getContacts", &getContacts);
     function("save", &save);
     function("load", &load);

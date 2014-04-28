@@ -38,7 +38,7 @@
         <noscript><h2 id='js-warning'>Toxine requires javascript.</h2></noscript>
         <div id='flash' class='ui-state-highlight ui-corner-all'>
             <span class='ui-icon ui-icon-info left'></span>
-            <span id='flash-text'>Loading...</span>
+            <span id='flash-text'>Loading toxine... this may take up to a couple minutes</span>
         </div>
         <!-------- DIALOGS ------------>
         <div id='wrap'>
@@ -99,42 +99,42 @@
             </div>
             <!-- Password input dialog -->
             <div class='dialog' id='password-dialog' title='Password'>
-                <span class='ui-icon-key ui-icon'></span>
+                <span class='ui-icon-key ui-icon left'></span>
                 <span id='password-dialog-text'></span>
                 <input type='password' id='password-dialog-password'
                     class='ui-widget-content ui-corner-all'></input>
             </div>
-        </div>
-        <!-------- SIDEBAR ------------>
-        <div id='sidebar' class='ui-widget-content ui-corner-all'>
-            <div id='user' class='ui-corner-top'>
-                <div id='user-name'>Not connected</div>
-                <div id='user-status'>Set your status...</div>
+            <!-------- SIDEBAR ------------>
+            <div id='sidebar' class='ui-widget-content ui-corner-all'>
+                <div id='user' class='ui-corner-top'>
+                    <div id='user-name'>Not connected</div>
+                    <div id='user-status'>Set your status...</div>
+                </div>
+                <ul id='contact-list'>
+                    <p>No contacts in your list. <a id='add-contact-button' href='#'>Add one</a>.</p>
+                </ul>
+                <div id='sidebar-buttons'>
+                    <button id='sidebar-add-contact'>Add contact...</button>
+                    <button id='sidebar-remove-contact' disabled>Remove contact</button>
+                    <input type='checkbox' class='toggle' id='sidebar-aliases' checked disabled></input>
+                    <label for='sidebar-aliases'>Show aliases</label>
+                    <button class='right' id='sidebar-settings'>Settings...</button>
+                    <button class='right' id='sidebar-credentials'>Your credentials...</button>
+                    <button class='right' id='sidebar-profile'>Your profile...</button>
+                </div>
             </div>
-            <ul id='contact-list'>
-                <p>No contacts in your list. <a id='add-contact-button' href='#'>Add one</a>.</p>
-            </ul>
-            <div id='sidebar-buttons'>
-                <button id='sidebar-add-contact'>Add contact...</button>
-                <button id='sidebar-remove-contact' disabled>Remove contact</button>
-                <input type='checkbox' class='toggle' id='sidebar-aliases' checked disabled></input>
-                <label for='sidebar-aliases'>Show aliases</label>
-                <button class='right' id='sidebar-settings'>Settings...</button>
-                <button class='right' id='sidebar-credentials'>Your credentials...</button>
-                <button class='right' id='sidebar-profile'>Your profile...</button>
-            </div>
-        </div>
-        <!-------- CHAT ------------>
-        <div id='chat'>
-            <div id='chat-contact-name'>&nbsp;</div>
-            <div id='chat-contact-statusmessage'>Select a contact to start chatting</div>
-            <ul id='chat-text'>
-            </ul>
-            <div id='chat-input'>
-                <textarea id='chat-input-text' rows='2' class='ui-widget-content ui-corner-all'></textarea>
-                <div id='chat-buttons'>
-                    <button id='chat-send' disabled>Send</button>
-                    <button id='chat-attach' disabled>Attach</button>
+            <!-------- CHAT ------------>
+            <div id='chat'>
+                <div id='chat-contact-name'>&nbsp;</div>
+                <div id='chat-contact-statusmessage'>Select a contact to start chatting</div>
+                <ul id='chat-text'>
+                </ul>
+                <div id='chat-input'>
+                    <textarea id='chat-input-text' rows='2' class='ui-widget-content ui-corner-all'></textarea>
+                    <div id='chat-buttons'>
+                        <button id='chat-send' disabled>Send</button>
+                        <button id='chat-attach' disabled>Attach</button>
+                    </div>
                 </div>
             </div>
         </div>

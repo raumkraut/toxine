@@ -26,9 +26,6 @@ const UPDATE_INTERVAL = 250; //milliseconds
 var tox = null;
 var flashTimeOut = null;
 
-// JS detected!
-$('#wrap').css('visibility', 'visible');
-
 // Setup main entry points
 $(window).on('load', setup);
 $(window).on('beforeunload', cleanup);
@@ -65,6 +62,7 @@ function setup()
 {  
     setupUI();
     $('#flash').fadeOut();
+    $('#wrap').css('display', 'initial');
     setupTox();
 }
 
@@ -124,6 +122,7 @@ function setupUI()
                 function()
                 {
                     delete localStorage.data;
+                    showFlash('Credentials cleared');
                     loadOrNew();
                 });
         });
@@ -286,7 +285,7 @@ function saveUI()
 function save()
 {
     console.log('Saving credentials');
-    if (!sessionStorage.password)
+    if (sessionStorage.password == null || !sessionStorage.password)
     {
         sessionStorage.password = '';
         localStorage.encrypted = false;

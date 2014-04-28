@@ -218,8 +218,6 @@ bool update()
 void cleanup()
 {
     tox_kill(tox);
-    if (tox_data)
-        delete[] tox_data;
     if (tmp_data)
         delete[] tmp_data;
 }

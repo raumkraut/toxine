@@ -22,6 +22,7 @@
  */
 
 const UPDATE_INTERVAL = 250; //milliseconds
+const NUM_BOOTSTRAP_NODES = 5;
 
 var tox = null;
 var flashTimeOut = null;
@@ -241,13 +242,18 @@ function setupTox()
 
 function resetConnection()
 {
-    showFlash("Connecting...");
     $('#profile-dialog-id').html(tox.getId());
+    showFlash("Connecting...");
+    dhtNodes = shuffle(dhtNodes);
+    var nodes = dhtNodes.slice(0, NUM_BOOTSTRAP_NODES);
     
-    console.log('Connecting to boostrap node(s)');
     tox.connected = false;
-    var hexid = '051B599C255428ABA13DCC3728B22291799C9CBC1081C5AD0B1F972C787E6562';
-    tox.bootstrap('127.0.0.1', 33445, hexid);
+    for (var i = 0; i < nodes.length; i++)
+    {
+        console.log('Connecting to boostrap node', nodes[i].owner);
+        tox.bootstrap(nodes[i].ipv4, nodes[i].port, nodes[i].pubkey);
+    }
+    
     update();
     if (tox.connected)
     {
@@ -378,6 +384,8 @@ function addContactUI()
     saveUI();
 }
 
+/* UTILS */
+
 function idToHexString(id)
 {
     ret = []
@@ -404,3 +412,10 @@ function hexStringToId(str)
     }
     return ret;
 }
+
+//+ Jonas Raoni Soares Silva
+//@ http://jsfromhell.com/array/shuffle [v1.0]
+function shuffle(o){ //v1.0
+    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+};

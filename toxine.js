@@ -27,14 +27,6 @@ var tox = null;
 var flashTimeOut = null;
 var dhtNodes = null;
 
-$.ajax({
-    url: "https://kirara.ca/poison/Nodefile.json",
-    success: function(data)
-    {
-        dhtNodes = parseJSON(data)['servers'];
-    }
-});
-
 // Setup main entry points
 $(window).on('load', setup);
 $(window).on('beforeunload', cleanup);
@@ -70,8 +62,6 @@ function createDevRandom()
 function setup()
 {  
     setupUI();
-    $('#flash').fadeOut();
-    $('#wrap').css('display', 'initial');
     setupTox();
 }
 
@@ -237,11 +227,21 @@ function showWarning(msg, okFunction)
 function setupTox()
 {
     tox = Module;
-    loadOrNewUI();
+    $.ajax({
+        url: "https://kirara.ca/poison/Nodefile.json",
+        success: function(data)
+        {
+            $('#wrap').css('display', 'initial');
+            console.log("Loaded DHT node list from kirara.ca");
+            dhtNodes = data.servers;
+            loadOrNewUI();
+        }
+    });
 }
 
 function resetConnection()
 {
+    showFlash("Connecting...");
     $('#profile-dialog-id').html(tox.getId());
     
     console.log('Connecting to boostrap node(s)');
@@ -294,20 +294,23 @@ function saveUI()
 function save()
 {
     console.log('Saving credentials');
-    if (sessionStorage.password == null || !sessionStorage.password)
+    if (sessionStorage.password == "null" || !sessionStorage.password)
     {
         sessionStorage.password = '';
         localStorage.encrypted = false;
     }
     else
+    {
+        console.log('Credentials are encrypted');
         localStorage.encrypted = true;
+    }
     var data = tox.save(sessionStorage.password);
     localStorage.data = data;
 }
 
 function loadOrNewUI()
 {
-    var encrypted = localStorage.encrypted == 'true';
+    var encrypted = (localStorage.encrypted == 'true');
     if (!encrypted)
     {
         sessionStorage.password = '';

@@ -36,8 +36,8 @@ License
 
 Since toxwrap is statically linked against the toxcore library, it has to be distributed under the
 terms of the [GNU General Public License][6], version 3.
-Note that other license conditions might apply to libsodium, whammy, opus and other libraries used
-by the code. IANAL.
+Note that other license conditions might apply to libsodium, opus, jquery and other libraries or
+resources included with this code. IANAL.
 
 [1]: http://tox.im  "Tox peer-to-peer instant messaging network"
 [2]: http://toxi.in "Live Toxine demo"

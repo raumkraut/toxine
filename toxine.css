@@ -17,6 +17,18 @@
  * 
  */
 
+@font-face {
+  font-family: 'Oxygen';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Oxygen'), local('Oxygen-Regular'), url(resources/Oxygen-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Oxygen';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Oxygen Bold'), local('Oxygen-Bold'), url(resources/Oxygen-Bold.ttf) format('truetype');
+}
 
 html {
     height: 100%;
@@ -47,10 +59,6 @@ hr {
     border: 0;
     border-top: 1px solid #C00;
     width: 85%;
-}
-
-.ui-widget {
-    font-family: 'Oxygen', sans-serif;
 }
 
 .dialog label, .dialog input, .dialog textarea, .dialog div b{

@@ -24,10 +24,9 @@
 const UPDATE_INTERVAL = 250; //milliseconds
 
 var tox = null;
-var password = null;
+var flashTimeOut = null;
 
 // JS detected!
-$('#js-warning').hide();
 $('#wrap').css('visibility', 'visible');
 
 // Setup main entry points
@@ -65,8 +64,8 @@ function createDevRandom()
 function setup()
 {  
     setupUI();
+    $('#flash').fadeOut();
     setupTox();
-    $('#loading').css('visibility', 'hidden');
 }
 
 function setupUI()
@@ -78,12 +77,11 @@ function setupUI()
         width: '400px',
         resizable: false,
         autoOpen: false,
-        buttons: { 'Add': function() {  } }
+        buttons: { 'Add': addContactUI }
     });
     $('#add-contact-dialog-id').css('font-family', 'monospace');
     $('#sidebar-add-contact').button({ icons: { primary:'ui-icon-plus' }, text: false })
         .click(function () { $('#add-contact-dialog').dialog('open'); });
-    $('#add-contact-button').click(function () { $('#add-contact-dialog').dialog('open'); });
     $('#sidebar-remove-contact').button({ icons: { primary:'ui-icon-minus' }, text: false });
     
     /** PROFILE */
@@ -173,16 +171,23 @@ function setupUI()
         tox.setName(value);
         saveUI();
         if (!value)
-            return "Your username...";
+        {
+            showFlash('Username cleared');
+            return 'Your username...';
+        }
         return value;
     });
+    
     $('#user-statusmessage').editable(function(value)
     {
         value = $.trim(value);
         tox.setStatusMessage(value);
         saveUI();
         if (!value)
-            return "Set your status...";
+        {
+            showFlash('Status message cleared');
+            return 'Set your status...';
+        }
         return value;
     });
     
@@ -191,6 +196,13 @@ function setupUI()
     /** CHAT */
     $('#chat-send').button({ icons: { primary:'ui-icon-comment' }, text: false });
     $('#chat-attach').button({ icons: { primary:'ui-icon-document' }, text: false });
+}
+
+function showFlash(msg)
+{
+    $('#flash-text').html(msg);
+    $('#flash').slideDown();
+    flashTimeout = setTimeout(function (){$('#flash').fadeOut()}, 3000);
 }
 
 function showWarning(msg, okFunction)
@@ -220,7 +232,7 @@ function setupTox()
     loadOrNewUI();
 }
 
-function reset()
+function resetConnection()
 {
     $('#profile-dialog-id').html(tox.getId());
     
@@ -232,13 +244,16 @@ function reset()
     if (tox.connected)
     {
         console.log('Connected, updating every', UPDATE_INTERVAL, 'ms');
+        showFlash('Connected');
         setInterval(update, UPDATE_INTERVAL);
     }
+    else
+        showFlash('Not connected');
 }
 
 function saveUI()
 {
-    if (password == null)
+    if (sessionStorage.password == null)
     {
         $('#password-dialog-text').html(
             'Enter a password for your new credentials, or click "Cancel" to not use a password:');
@@ -255,7 +270,7 @@ function saveUI()
                 },
                 'Cancel': function ()
                 {
-                    password = '';
+                    sessionStorage.password = '';
                     save();
                     $('#password-dialog').dialog('close');
                 }
@@ -271,24 +286,23 @@ function saveUI()
 function save()
 {
     console.log('Saving credentials');
-    if (!password)
+    if (!sessionStorage.password)
     {
-        password = '';
+        sessionStorage.password = '';
         localStorage.encrypted = false;
     }
     else
         localStorage.encrypted = true;
-    var data = tox.save(password);
+    var data = tox.save(sessionStorage.password);
     localStorage.data = data;
 }
 
 function loadOrNewUI()
 {
-    var encrypted = localStorage.encrypted;
-    var password = null;
+    var encrypted = localStorage.encrypted == 'true';
     if (!encrypted)
     {
-        password = '';
+        sessionStorage.password = '';
         loadOrNew();
     }
     else
@@ -300,7 +314,7 @@ function loadOrNewUI()
             {
                 'OK': function ()
                 {
-                    password = $('#password-dialog').val();
+                    sessionStorage.password = $('#password-dialog').val();
                     loadOrNew();
                     $('#password-dialog').dialog('close');
                 }
@@ -317,22 +331,24 @@ function loadOrNew()
     tox.setup();
     if (data == null || data == '')
     {
-        console.log('No saved credentials found, creating new ones');
-        password = null;
+        showFlash('No saved credentials found, creating new ones');
+        sessionStorage.password = null;
         saveUI();
     }
-    else if (!tox.load(data, password))
+    else if (!tox.load(data, sessionStorage.password))
     {
-        console.log('Error loading credentials, creating new ones');
-        password = null;
+        showFlash('Error loading credentials, creating new ones');
+        sessionStorage.password = null;
         saveUI();
     }
-    reset();
+    else
+        showFlash('Credentials loaded');
+    resetConnection();
 }
 
 function cleanup()
 {
-    console.log('Exiting');
+    showFlash('Bye');
     if (tox)
         tox.cleanup();
 }
@@ -340,6 +356,15 @@ function cleanup()
 function update()
 {
     tox.connected = tox.update();
+}
+
+function addContactUI()
+{
+    var id = $('#add-contact-dialog-id').html();
+    var msg = $('#add-contact-dialog-message').html();
+    tox.addContact(id, msg);
+    showFlash('Contact request sent');
+    saveUI();
 }
 
 function idToHexString(id)

@@ -34,8 +34,12 @@
    MA 02110-1301, USA.
 -->
     <body>
-        <h1>Toxine <span id='alpha-tag'>alpha</span><span id='loading'> is loading...</span></h1>
+        <h1>Toxine <span id='alpha-tag'>alpha</span></h1>
         <noscript><h2 id='js-warning'>Toxine requires javascript.</h2></noscript>
+        <div id='flash' class='ui-state-highlight ui-corner-all'>
+            <span class='ui-icon ui-icon-info left'></span>
+            <span id='flash-text'>Loading...</span>
+        </div>
         <!-------- DIALOGS ------------>
         <div id='wrap'>
             <!-- Add contact dialog -->
@@ -47,7 +51,7 @@
                 <span class='ui-icon-tag ui-icon left'></span>
                 <label for='connect-dialog-alias'>Alias:</label>
                 <input type='text' id='add-contact-dialog-alias'
-                    class='ui-widget-content ui-corner-all'></input>
+                    class='ui-widget-content ui-corner-all' disabled></input>
                 <label for='add-contact-dialog-message'>Message:</label>
                 <textarea id='add-contact-dialog-message'
                     class='ui-widget-content ui-corner-all'
@@ -113,7 +117,7 @@
             <div id='sidebar-buttons'>
                 <button id='sidebar-add-contact'>Add contact...</button>
                 <button id='sidebar-remove-contact' disabled>Remove contact</button>
-                <input type='checkbox' class='toggle' id='sidebar-aliases' checked></input>
+                <input type='checkbox' class='toggle' id='sidebar-aliases' checked disabled></input>
                 <label for='sidebar-aliases'>Show aliases</label>
                 <button class='right' id='sidebar-settings'>Settings...</button>
                 <button class='right' id='sidebar-credentials'>Your credentials...</button>

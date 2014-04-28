@@ -70,6 +70,7 @@ function setup()
 
 function setupUI()
 {  
+    console.log('Setting up UI');
     /** ADD/REMOVE CONTACTS */
     $('#add-contact-dialog').dialog(
     {
@@ -108,10 +109,20 @@ function setupUI()
         autoOpen: false,
     });
     
-    $('#credentials-dialog-persistent').button();
     $('#credentials-dialog-encrypt').button();
     $('#credentials-dialog-download').button({ icons: { primary:'ui-icon-arrowthick-1-s' } });
-    $('#credentials-dialog-clear').button({ icons: { secondary:'ui-icon-trash' } });
+    $('#credentials-dialog-clear').button({ icons: { secondary:'ui-icon-trash' } })
+        .click(function ()
+        {
+            showWarning(
+                'Your profile and contact list will be irrevocably deleted and a new Tox ID ' +
+                'will be generated. Are you sure?',
+                function()
+                {
+                    delete localStorage.data;
+                    loadOrNew();
+                });
+        });
     
     $('#sidebar-credentials').button({ icons: { primary:'ui-icon-contact' }, text: false })
         .click(function () { $('#credentials-dialog').dialog('open'); });
@@ -131,6 +142,24 @@ function setupUI()
     $('#sidebar-settings').button({ icons: { primary:'ui-icon-gear' }, text: false })
         .click(function () { $('#settings-dialog').dialog('open'); });
 
+    /** WARNING DIALOG */
+    $('#warning-dialog').dialog(
+    {
+        width: '300px',
+        modal: true,
+        resizable: false,
+        autoOpen: false
+    });
+    
+    /** PASSWORD DIALOG */
+    $('#password-dialog').dialog(
+    {
+        width: '300px',
+        modal: true,
+        resizable: false,
+        autoOpen: false
+    });
+    
     /** SIDEBAR & CONTACT LIST */
     $('#user-name').editable();
     $('#user-status').editable();
@@ -142,22 +171,84 @@ function setupUI()
     $('#chat-attach').button({ icons: { primary:'ui-icon-document' }, text: false });
 }
 
+function showWarning(msg, okFunction)
+{
+    $('#warning-dialog-text').html(msg);
+    $('#warning-dialog').dialog(
+        {
+            buttons: 
+            {
+                'OK': function ()
+                {
+                    okFunction();
+                    $('#warning-dialog').dialog('close');
+                },
+                'Cancel': function ()
+                {
+                    $('#warning-dialog').dialog('close');
+                }
+            }
+        })
+        .dialog('open');
+}
+
 function setupTox()
 {
     tox = Module;
     
-    tox.connected = false;
-    tox.setup();
+    loadOrNew();
+}
+
+function reset()
+{
+    $('#profile-dialog-tox-id').html(tox.getId());
     
+    console.log('Connecting to boostrap node(s)');
+    tox.connected = false;
     var hexid = '051B599C255428ABA13DCC3728B22291799C9CBC1081C5AD0B1F972C787E6562';
     tox.bootstrap('127.0.0.1', 33445, hexid);
     update();
     if (tox.connected)
+    {
+        console.log('Connected, updating every', UPDATE_INTERVAL, 'ms');
         setInterval(update, UPDATE_INTERVAL);
+    }
+}
+
+function save()
+{
+    console.log('Saving credentials');
+    var data = tox.save('');
+    delete localStorage.encrypted
+    localStorage.data = data;
+}
+
+function loadOrNew()
+{
+    var data = localStorage.data;
+    if (data == null || data == '')
+    {
+        console.log('No saved credentials found, creating new ones');
+        console.log('This may take up to a couple minutes');
+        tox.setup();
+        save();
+        reset();
+        return;
+    }
+    console.log('Initializing tox & loading existing credentials');
+    console.log('This may take up to a couple minutes');
+    tox.setup();
+    if (!tox.load(data, ''))
+    {
+        console.log('Error loading credentials, creating new ones');
+        save();
+    }
+    reset();
 }
 
 function cleanup()
 {
+    console.log('Exiting');
     if (tox)
         tox.cleanup();
 }

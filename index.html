@@ -1,4 +1,18 @@
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml'>
+    <head>
+        <title>Toxine</title>
+        <meta content='text/html;charset=utf-8' http-equiv='Content-Type'>
+        <link href='http://fonts.googleapis.com/css?family=Oxygen:400,700' rel='stylesheet' type='text/css'>
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script>
+        <link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/blitzer/jquery-ui.css' />
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js'></script>
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/jeditable.js/1.7.3/jeditable.min.js'></script>
+        <script src='whammy/whammy.js'></script>
+        <script src='toxine.js'></script>
+        <script src='tox.js'></script>
+        <link href='toxine.css' rel='stylesheet' type='text/css'>
+    </head>
 <!--
    toxine.html
    
@@ -21,20 +35,6 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
    MA 02110-1301, USA.
 -->
-<html xmlns='http://www.w3.org/1999/xhtml'>
-    <head>
-        <title>Toxine</title>
-        <meta content='text/html;charset=utf-8' http-equiv='Content-Type'>
-        <link href='http://fonts.googleapis.com/css?family=Oxygen:400,700' rel='stylesheet' type='text/css'>
-        <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script>
-        <link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/blitzer/jquery-ui.css' />
-        <script src='http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js'></script>
-        <script src='http://cdnjs.cloudflare.com/ajax/libs/jeditable.js/1.7.3/jeditable.min.js'></script>
-        <script src='whammy/whammy.js'></script>
-        <script src='toxine.js'></script>
-        <script src='tox.js'></script>
-        <link href='toxine.css' rel='stylesheet' type='text/css'>
-    </head>
     <body>
         <h1>Toxine <span id='alpha-tag'>alpha</span><span id='loading'> is loading...</span></h1>
         <noscript><h2 id='js-warning'>Toxine requires javascript.</h2></noscript>
@@ -73,8 +73,6 @@
                 <input type='file' id='connect-dialog-data'
                     class='ui-widget-content ui-corner-all'>
                 </input>
-                <input type='checkbox' id='credentials-dialog-persistent' checked></input>
-                <label for='credentials-dialog-persistent'>Enable persistent storage</label>
                 <input type='checkbox' id='credentials-dialog-encrypt'></input>
                 <label for='credentials-dialog-encrypt'>Encrypt</label>
                 <a href='#' class='half' id='credentials-dialog-download'>Download credentials</a>
@@ -96,6 +94,17 @@
                         class='ui-widget-content ui-corner-all'
                         ></textarea>
                 </div>
+            </div>
+            <!-- Warning dialog -->
+            <div class='dialog' id='warning-dialog' title='Warning'>
+                <span class='ui-icon-alert ui-icon left'></span>
+                <p id='warning-dialog-text'></p>
+            </div>
+            <!-- Password input dialog -->
+            <div class='dialog' id='password-dialog' title='Password'>
+                <span class='ui-icon-alert ui-icon key'></span>
+                <label for='password-dialog-password'>Input password:</label>
+                <input type='password' id='password-dialog-password'></input>
             </div>
         </div>
         <!-------- SIDEBAR ------------>
@@ -136,7 +145,10 @@
             <a href='http://github.com/polymeris/toxine#users-guide'>Help</a> |
             <a href='http://github.com/polymeris/toxine'>About Toxine</a> |
             <a href='http://tox.im'>What is Tox?</a> |
-            <a href='mailto:info@toxi.in'>Contact</a> 
+            <a href='mailto:info@toxi.in'>Contact</a><br/>
+            <p class='donate'>Donate to
+                <a href='bitcoin:175mD2EF2BBEVzRG1vArnAnvF28sd7RRSi'>175mD2EF2BBEVzRG1vArnAnvF28sd7RRSi</a>
+            </p>
         </div>
         <a href='http://github.com/polymeris/toxine'>
             <img style='position: absolute; top: 0; right: 0; border: 0;'

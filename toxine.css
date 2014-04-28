@@ -43,7 +43,7 @@ body {
 
 div#wrap {
     padding: 0;
-    visibility: hidden;
+    display: none;
 }
 
 div {

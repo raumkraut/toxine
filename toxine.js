@@ -24,6 +24,7 @@
 const UPDATE_INTERVAL = 250; //milliseconds
 
 var tox = null;
+var password = false;
 
 // JS detected!
 $('#js-warning').hide();
@@ -109,7 +110,6 @@ function setupUI()
         autoOpen: false,
     });
     
-    $('#credentials-dialog-encrypt').button();
     $('#credentials-dialog-download').button({ icons: { primary:'ui-icon-arrowthick-1-s' } });
     $('#credentials-dialog-clear').button({ icons: { secondary:'ui-icon-trash' } })
         .click(function ()
@@ -195,8 +195,7 @@ function showWarning(msg, okFunction)
 function setupTox()
 {
     tox = Module;
-    
-    loadOrNew();
+    loadOrNewUI();
 }
 
 function reset()
@@ -215,33 +214,93 @@ function reset()
     }
 }
 
+function saveUI()
+{
+    if (password == false)
+    {
+        $('#password-dialog-text').html(
+            'Enter a password for your new credentials, or click "Cancel" to not use a password:');
+        $('#password-dialog').dialog(
+        {
+            buttons: 
+            {
+                'OK': function ()
+                {
+                    password = $('#password-dialog-password');
+                    save();
+                    $('#password-dialog-password').val('');
+                    $('#password-dialog').dialog('close');
+                },
+                'Cancel': function ()
+                {
+                    password = '';
+                    save();
+                    $('#password-dialog').dialog('close');
+                }
+            }
+        }).dialog('open');
+    }
+    else
+        save();
+}
+
 function save()
 {
     console.log('Saving credentials');
-    var data = tox.save('');
-    delete localStorage.encrypted
+    if (!password)
+    {
+        password = '';
+        delete localStorage.encrypted;
+    }
+    else
+        localStorage.encrypted = true;
+    var data = tox.save(password);
     localStorage.data = data;
 }
 
-function loadOrNew()
+function loadOrNewUI()
 {
+    var encrypted = localStorage.encrypted;
+    var password = null;
+    if (encrypted)
+    {
+        $('#password-dialog-text').html('Enter the password of your credentials:');
+        $('#password-dialog').dialog(
+        {
+            buttons: 
+            {
+                'OK': function ()
+                {
+                    password = $('#password-dialog').val();
+                    loadOrNew(password);
+                    $('#password-dialog').dialog('close');
+                }
+            }
+        }).dialog('open');
+    }
+    else
+        loadOrNew(false);
+}
+
+function loadOrNew(password)
+{
+    if (!password)
+        password = '';
     var data = localStorage.data;
+    
+    console.log('Initializing tox, this may take up to a couple minutes');
+    tox.setup();
     if (data == null || data == '')
     {
         console.log('No saved credentials found, creating new ones');
-        console.log('This may take up to a couple minutes');
-        tox.setup();
-        save();
-        reset();
-        return;
+        password = null;
+        saveUI();
     }
-    console.log('Initializing tox & loading existing credentials');
-    console.log('This may take up to a couple minutes');
-    tox.setup();
-    if (!tox.load(data, ''))
+    else if (!tox.load(data, password))
     {
         console.log('Error loading credentials, creating new ones');
-        save();
+        password = null;
+        saveUI();
     }
     reset();
 }

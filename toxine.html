@@ -73,8 +73,6 @@
                 <input type='file' id='connect-dialog-data'
                     class='ui-widget-content ui-corner-all'>
                 </input>
-                <input type='checkbox' id='credentials-dialog-encrypt'></input>
-                <label for='credentials-dialog-encrypt'>Encrypt</label>
                 <a href='#' class='half' id='credentials-dialog-download'>Download credentials</a>
                 <a href='#' class='half' id='credentials-dialog-clear'>Clear now</a>
             </div>
@@ -98,13 +96,14 @@
             <!-- Warning dialog -->
             <div class='dialog' id='warning-dialog' title='Warning'>
                 <span class='ui-icon-alert ui-icon left'></span>
-                <p id='warning-dialog-text'></p>
+                <span id='warning-dialog-text'></span>
             </div>
             <!-- Password input dialog -->
             <div class='dialog' id='password-dialog' title='Password'>
-                <span class='ui-icon-alert ui-icon key'></span>
-                <label for='password-dialog-password'>Input password:</label>
-                <input type='password' id='password-dialog-password'></input>
+                <span class='ui-icon-key ui-icon'></span>
+                <span id='password-dialog-text'></span>
+                <input type='password' id='password-dialog-password'
+                    class='ui-widget-content ui-corner-all'></input>
             </div>
         </div>
         <!-------- SIDEBAR ------------>

@@ -206,7 +206,7 @@ bool setup()
     if (tox)
         cleanup();
         
-    tox = tox_new(TOX_ENABLE_IPV6_DEFAULT);
+    tox = tox_new(0);
     if (!tox)
     {
         DEBUG_PRINT("Failed to allocate Messenger datastructure");

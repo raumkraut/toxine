@@ -151,6 +151,14 @@ function setupUI()
         autoOpen: false
     });
     
+    /** PASSWORD DIALOG */
+    $('#password-dialog').dialog(
+    {
+        width: '300px',
+        modal: true,
+        resizable: false,
+        autoOpen: false
+    });
     
     /** SIDEBAR & CONTACT LIST */
     $('#user-name').editable();

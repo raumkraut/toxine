@@ -61,10 +61,6 @@ hr {
     width: 85%;
 }
 
-.ui-widget {
-    font-family: 'Oxygen', sans-serif;
-}
-
 .dialog label, .dialog input, .dialog textarea, .dialog div b{
     display: block;
     margin-bottom: 10px;

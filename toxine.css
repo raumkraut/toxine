@@ -194,3 +194,12 @@ li {
     margin-top: 10px;
     float: left;
 }
+
+.donate {
+    font-size: 80%;
+    color: #404040;
+}
+
+.donate a {
+    color: #404040;
+}

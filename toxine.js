@@ -151,6 +151,7 @@ function setupUI()
         autoOpen: false
     });
     
+    
     /** SIDEBAR & CONTACT LIST */
     $('#user-name').editable();
     $('#user-status').editable();
@@ -188,6 +189,10 @@ function setupTox()
     tox = Module;
     
     loadOrNew();
+}
+
+function reset()
+{
     $('#profile-dialog-tox-id').html(tox.getId());
     
     console.log('Connecting to boostrap node(s)');
@@ -219,6 +224,7 @@ function loadOrNew()
         console.log('This may take up to a couple minutes');
         tox.setup();
         save();
+        reset();
         return;
     }
     console.log('Initializing tox & loading existing credentials');
@@ -229,6 +235,7 @@ function loadOrNew()
         console.log('Error loading credentials, creating new ones');
         save();
     }
+    reset();
 }
 
 function cleanup()

@@ -164,7 +164,7 @@ INCLUDES=																					\
 	-Itoxcore																				\
 	-include sodiumdefines.h
 
-CFLAGS=-O2 -Wall --bind -DDEBUG -funsigned-char #-s VERBOSE=1
+CFLAGS=-O2 -Wall --bind -DDEBUG -funsigned-char #-s ASSERTIONS=1 #-s VERBOSE=1
 
 BC_OBJECTS=$(SOURCES:.c=.bc)
 

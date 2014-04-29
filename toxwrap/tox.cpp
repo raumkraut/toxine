@@ -27,6 +27,7 @@
 #include <vector>
 #include <cstdlib>
 #include <cstdio>
+#include <mutex>
 
 extern "C"
 {
@@ -59,6 +60,7 @@ struct Contact
 /* Stuff used internally */
 Tox  * tox = NULL;
 uint8_t * tox_data = NULL;
+std::mutex mutex;
 
 /* temporary buffers to generate strings*/
 uint8_t * tmp_data = NULL;
@@ -197,6 +199,7 @@ extern "C"
 //  Call at least a couple times per second, but no more often than every WAITPERIOD ms.
 bool update()
 {  
+    mutex.lock();
     bool ret = true;
     ret &= tox_wait_prepare(tox, tox_data);
     if (!ret)
@@ -211,15 +214,16 @@ bool update()
     ret &= tox_isconnected(tox);
     if (!ret)
         DEBUG_PRINT("Not connected\n");
+    mutex.unlock();
     return ret;
 }
 
 /// Kill tox and delete buffers from heap.
 void cleanup()
 {
+    mutex.lock();
     tox_kill(tox);
-    if (tmp_data)
-        delete[] tmp_data;
+    mutex.unlock();
 }
 
 /// Setup tox and install callbacks.
@@ -228,23 +232,30 @@ bool setup()
     if (tox)
         cleanup();
     
+    mutex.lock();
     // IPv6 doesn't seem to work. I get strange ws:// addresses
     // TODO check this
     tox = tox_new(0);
     if (!tox)
     {
         DEBUG_PRINT("Failed to allocate Messenger datastructure");
+        mutex.unlock();
         return false;
     }
     
     tox_data = new uint8_t[tox_wait_data_size()];
     if (!tox_data)
+    {
+        DEBUG_PRINT("Failed to allocate tox data");
+        mutex.unlock();
         return false;
+    }
     
     tox_callback_friend_request(tox, friend_request, NULL);
     tox_callback_friend_message(tox, friend_message, NULL);
     tox_callback_name_change(tox, name_change, NULL);
     tox_callback_status_message(tox, status_message, NULL);
+    mutex.unlock();
     return true;
 }
 
@@ -252,15 +263,21 @@ bool setup()
 bool bootstrap(const string & address, int port, const string & id)
 {
     // IPv6 disabled, see comments in setup() above
-    return tox_bootstrap_from_address(tox, address.c_str(), 0, htons(port), hexstr_to_id(id));
+    mutex.lock();
+    bool ret = tox_bootstrap_from_address(tox, address.c_str(), 0, htons(port), hexstr_to_id(id));
+    mutex.unlock();
+    return ret;
 }
 
 /// Send a contact request, with optional message
 bool addContact(const string & id, const string & msg)
 {
     /* tox-core isn't const-correct, ugly cast is necessary */
+    mutex.lock();
     uint8_t * cstr = (uint8_t *)msg.c_str();
-    return tox_add_friend(tox, hexstr_to_id(id), cstr, msg.length());
+    bool ret = tox_add_friend(tox, hexstr_to_id(id), cstr, msg.length());
+    mutex.unlock();
+    return ret;
 }
 
 /// Delete contact from list
@@ -280,8 +297,11 @@ bool sendMessage(int i, const string & msg)
 /// Get the user's full Tox ID
 string getId()
 {
+    mutex.lock();
     tox_get_address(tox, tmp_id);
-    return id_to_hexstr(tmp_id);
+    string ret = id_to_hexstr(tmp_id);
+    mutex.unlock();
+    return ret;
 }
 
 /// Set the user's name
@@ -346,6 +366,7 @@ void changeNospam()
 // Contact-related functions take an index into this list as parameter
 const vector<Contact> & getContacts()
 {
+    mutex.lock();
     int n = tox_count_friendlist(tox);
     int * fn = new int[n];
     int n_copied = tox_get_friendlist(tox, fn, n);
@@ -379,6 +400,7 @@ const vector<Contact> & getContacts()
     }
     
     delete[] fn;
+    mutex.unlock();
     return contacts;
 }
 
@@ -387,6 +409,7 @@ const vector<Contact> & getContacts()
 // TODO: Binary option
 string save(const string & key)
 {
+    mutex.lock();
     int size;
     if (!key.empty())
         size = tox_size_encrypted(tox);
@@ -404,6 +427,7 @@ string save(const string & key)
     
     string ret = data_to_hexstr(tmp_data, size);
     delete[] tmp_data;
+    mutex.unlock();
     return ret;
 }
 
@@ -412,6 +436,7 @@ string save(const string & key)
 // TODO: Binary option
 bool load(const string & datastr, const string & key)
 {
+    mutex.lock();
     int ret;
     /* tox-core isn't const-correct, ugly cast is necessary */
     uint8_t * data = hexstr_to_data(datastr);
@@ -420,6 +445,7 @@ bool load(const string & datastr, const string & key)
     else
         ret = tox_load(tox, data, datastr.length() / 2);
     
+    mutex.unlock();
     return ret == 0;
 }
 

@@ -377,8 +377,8 @@ function update()
 
 function addContactUI()
 {
-    var id = $('#add-contact-dialog-id').html();
-    var msg = $('#add-contact-dialog-message').html();
+    var id = $('#add-contact-dialog-id').val();
+    var msg = $('#add-contact-dialog-message').val();
     tox.addContact(id, msg);
     showFlash('Contact request sent');
     saveUI();

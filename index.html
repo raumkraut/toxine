@@ -53,14 +53,14 @@
                 <input type='text' id='add-contact-dialog-alias'
                     class='ui-widget-content ui-corner-all' disabled></input>
                 <label for='add-contact-dialog-message'>Message:</label>
-                <textarea id='add-contact-dialog-message'
+                <input id='add-contact-dialog-message'
                     class='ui-widget-content ui-corner-all'
-                    ></textarea>
+                    ></input>
             </div>
             <!-- Profile dialog -->
             <div class='dialog' id='profile-dialog' title='Your profile'>
                 <span><b>Tox ID</b>(share for friends to add you)</span>
-                <textarea rows='3' id='profile-dialog-id' class='toxid' disabled></textarea>
+                <textarea rows='3' id='profile-dialog-id' class='toxid' readonly></textarea>
                 <button class='half' id='profile-dialog-qr' disabled>Generate QR code</button>
                 <button class='half' id='profile-dialog-nospam'>New nospam code</button>
             </div>

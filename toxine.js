@@ -213,8 +213,12 @@ function showWarning(msg, okFunction)
             {
                 'OK': function ()
                 {
-                    okFunction();
+                    $('#warning-dialog').parent().find('button').attr('disabled', true)
+                    $('body').css('cursor', 'progress');
                     $('#warning-dialog').dialog('close');
+                    okFunction();
+                    $('body').css('cursor', 'default');
+                    $('#warning-dialog').parent().find('button').attr('disabled', false)
                 },
                 'Cancel': function ()
                 {
@@ -278,15 +282,15 @@ function saveUI()
                 'OK': function ()
                 {
                     password = $('#password-dialog-password');
-                    save();
                     $('#password-dialog-password').val('');
                     $('#password-dialog').dialog('close');
+                    save();
                 },
                 'Cancel': function ()
                 {
                     sessionStorage.password = '';
-                    save();
                     $('#password-dialog').dialog('close');
+                    save();
                 }
             }
         }).dialog('open');
@@ -332,8 +336,8 @@ function loadOrNewUI()
                 'OK': function ()
                 {
                     sessionStorage.password = $('#password-dialog').val();
-                    loadOrNew();
                     $('#password-dialog').dialog('close');
+                    loadOrNew();
                 }
             }
         }).dialog('open');

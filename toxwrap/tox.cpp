@@ -416,8 +416,6 @@ string save(const string & key)
     else
         size = tox_size(tox);
     
-    if (tmp_data)
-        delete[] tmp_data;
     uint8_t * tmp_data = new uint8_t[size];
     
     if (!key.empty()) /* tox-core isn't const-correct, ugly cast is necessary */

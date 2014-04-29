@@ -112,11 +112,8 @@ uint8_t * hexstr_to_data(string hexstr)
     const char * cstr = hexstr.c_str();
     for(int i = 0; i < outlen; i++)
     {
-        // Workaround for emscripten bug #2322
-        unsigned int byte;
-        if (sscanf(cstr, "%2x", &byte) < 1)
+        if (sscanf(cstr, "%2hhx", &tmp_data[i]) < 1)
             DEBUG_PRINT("Bad hexstring: %s\n", cstr);
-        tmp_data[i] = byte;
         cstr += 2 * sizeof(uint8_t);
     }
     return tmp_data;

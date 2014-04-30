@@ -17,6 +17,33 @@ TOXCORE_SOURCES= 															\
 	toxcore/onion_client.c													\
 	toxcore/TCP_client.c
 
+TOXAV_SOURCES=																\
+	toxav/event.c															\
+	toxav/media.c															\
+	toxav/toxav.c															\
+	toxav/msi.c																\
+	toxav/rtp.c
+
+OPUS_SOURCES=                                                               \
+	opus/src/repacketizer.c                                                 \
+	opus/src/opus.c                                                         \
+	opus/src/opus_encoder.c                                                 \
+	opus/src/opus_multistream_encoder.c                                     \
+	opus/src/opus_decoder.c                                                 \
+	opus/src/mlp_data.c                                                     \
+	opus/src/mlp.c                                                          \
+	opus/src/opus_multistream_decoder.c                                     \
+	opus/src/opus_multistream.c                                             \
+	opus/src/analysis.c
+
+VPX_SOURCES=                                                                \
+	vpx/src/svc_encodeframe.c                                               \
+	vpx/src/vpx_encoder.c                                                   \
+	vpx/src/vpx_psnr.c                                                      \
+	vpx/src/vpx_image.c                                                     \
+	vpx/src/vpx_decoder.c                                                   \
+	vpx/src/vpx_codec.c
+
 LIBSODIUM_SOURCES=																			\
 	libsodium/crypto_auth/crypto_auth.c														\
 	libsodium/crypto_auth/hmacsha256/auth_hmacsha256_api.c                                  \
@@ -150,19 +177,23 @@ LIBSODIUM_SOURCES=																			\
 	libsodium/sodium/utils.c                                                                \
 	libsodium/sodium/version.c                                                              
 
-SOURCES = $(TOXCORE_SOURCES) $(LIBSODIUM_SOURCES)
+SOURCES = $(TOXCORE_SOURCES) $(TOXAV_SOURCES) $(OPUS_SOURCES) $(LIBSODIUM_SOURCES)
 
 EMCC=EMCC_FAST_COMPILER=0 emcc
 
-MAIN_SOURCE = tox.cpp
+MAIN_SOURCES = tox.cpp toxav.cpp
 
 OUTPUT_JS = ../tox.js
 
 INCLUDES=																					\
+	-I.																						\
 	-Ilibsodium/include																		\
 	-Ilibsodium/include/sodium																\
 	-Itoxcore																				\
-	-include sodiumdefines.h
+	-Iopus/include																			\
+	-Iopus/celt																				\
+	-Iopus/silk																				\
+	-include defines.h
 
 CFLAGS+=-O2 -Wall --bind -DDEBUG -funsigned-char
 
@@ -172,7 +203,7 @@ BC_OBJECTS=$(SOURCES:.c=.bc)
 	$(EMCC) $(CFLAGS) $(INCLUDES) $< -o $@
 
 $(OUTPUT_JS): $(MAIN_SOURCE) $(BC_OBJECTS) data/DHTnodes Makefile
-	$(EMCC) $(CFLAGS) $(EXP_FUNCS) $(INCLUDES) $(BC_OBJECTS) $(MAIN_SOURCE) -o $(OUTPUT_JS)
+	$(EMCC) $(CFLAGS) $(EXP_FUNCS) $(INCLUDES) $(BC_OBJECTS) $(MAIN_SOURCES) -o $(OUTPUT_JS)
 
 clean:
 	rm -f $(OUTPUT_JS) $(BC_OBJECTS)

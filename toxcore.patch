@@ -1,3 +1,15 @@
+diff --git a/toxav/event.h b/toxav/event.h
+index 0fb2d12..7a954e9 100644
+--- a/toxav/event.h
++++ b/toxav/event.h
+@@ -25,6 +25,7 @@
+ #ifndef __TOXEVENT
+ #define __TOXEVENT
+ 
++#include <network.h>
+ 
+ /**
+  * - Events are, in fact, ran in their own threads upon execution.
 diff --git a/toxcore/network.c b/toxcore/network.c
 index 7813ab0..9738c26 100644
 --- a/toxcore/network.c

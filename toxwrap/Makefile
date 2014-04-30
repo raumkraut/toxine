@@ -195,7 +195,7 @@ INCLUDES=																					\
 	-Iopus/silk																				\
 	-include defines.h
 
-CFLAGS+=-O2 -Wall --bind -DDEBUG -funsigned-char
+CFLAGS+=-O2 -Wall --bind -funsigned-char
 
 BC_OBJECTS=$(SOURCES:.c=.bc)
 

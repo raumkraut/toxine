@@ -1,3 +1,4 @@
+#define DEBUG
 /* opus stuff. TODO: figure out what this stuff means and if other defines would be better */
 #define OPUS_BUILD
 #define VAR_ARRAYS

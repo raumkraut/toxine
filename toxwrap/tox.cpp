@@ -1,4 +1,4 @@
-/* toxwrap.c
+/* tox.cpp
  * High-level javascript wrapper for toxlib
  * 
  * Camilo Polymeris, 2014

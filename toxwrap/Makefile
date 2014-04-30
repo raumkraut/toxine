@@ -202,7 +202,7 @@ BC_OBJECTS=$(SOURCES:.c=.bc)
 %.bc: %.c
 	$(EMCC) $(CFLAGS) $(INCLUDES) $< -o $@
 
-$(OUTPUT_JS): $(MAIN_SOURCE) $(BC_OBJECTS) data/DHTnodes Makefile
+$(OUTPUT_JS): $(MAIN_SOURCE) $(BC_OBJECTS) Makefile
 	$(EMCC) $(CFLAGS) $(EXP_FUNCS) $(INCLUDES) $(BC_OBJECTS) $(MAIN_SOURCES) -o $(OUTPUT_JS)
 
 clean:

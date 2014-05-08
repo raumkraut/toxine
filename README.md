@@ -15,7 +15,7 @@ no matter the level of expertise of the user or their prefered platform. In [thi
 _irungentoo_ predicted that Tox would be "usable by anyone with a web browser". Jokes aside, a
 javascript implementation allows anyone to test this messaging system by just pointing their
 browsers to [a webpage hosting toxine][2].
-These users can later export their configuration (secret key and users list) if they decide to
+These users can later export their profile (secret key and users list) if they decide to
 switch to a desktop or mobile Tox client.
 
 Note that while the code is (optionally) provided by a webpage and runs in the browser environment,
@@ -38,6 +38,9 @@ Since toxwrap is statically linked against the toxcore library, it has to be dis
 terms of the [GNU General Public License][6], version 3.
 Note that other license conditions might apply to libsodium, opus, jquery and other libraries or
 resources included with this code. IANAL.
+
+At a later point, in particular if a non-GPL version of the core is implemented (xot, the rust implementation, is a
+likely candidate), I'd like to switch to a more permissive license for toxine.
 
 [1]: http://tox.im  "Tox peer-to-peer instant messaging network"
 [2]: http://toxi.in "Live Toxine demo"
